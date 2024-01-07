@@ -1,0 +1,7 @@
+<div class="exam-component">
+    <app-intro *ngIf="showIntro" (startDemo)="startDemo()"></app-intro>
+    <div *ngIf="!showIntro" class="exam-content">
+        <app-answer></app-answer>
+        <app-question></app-question>
+    </div>    
+</div>

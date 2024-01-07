@@ -1,0 +1,12 @@
+<p-card header="Introduction guide" subheader="Hello user" [style]="{ width: '360px' }">
+    <ng-template pTemplate="header">
+        <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+    </ng-template>
+    <p>
+        Congradulation, you were selected as candidate to this role. After you press button below will begin demonstration of our app wit example question you can stop 
+        it in any time and return back in any time later.
+    </p>
+    <ng-template pTemplate="footer">
+        <p-button (click)="tryDemo()" label="Try demo" icon="pi pi-check"></p-button>
+    </ng-template>
+</p-card>
