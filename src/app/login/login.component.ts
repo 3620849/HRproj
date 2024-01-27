@@ -29,6 +29,11 @@ export class LoginComponent {
     })
   }
   login(){
-    this.loginSrv.login(this.mail,this.pass);
+    this.loginSrv.login(this.mail,this.pass)
+    .subscribe(res=>{
+      if(res.error){
+        
+      }
+    });
   }
 }

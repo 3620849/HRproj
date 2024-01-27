@@ -7,10 +7,21 @@ import { Observable, Subject, of ,map} from 'rxjs';
 export class LoginService {
   user:WritableSignal<any> = signal(null);
   constructor() { }
-  login(email:string,pass:string){
+  login(email:string,pass:string):Observable<any>{
+    let res = new Subject();
     if(email==='a@gmail.com' && pass==='123'){
-      this.user.update(el=>({name:'Amy Elsner', role:'admin',photo:'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'}))
+      of({name:'Amy Elsner',token:'1flkgjfdldsfsioerwijdkvlfmv', role:'admin',photo:'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'})
+      .subscribe(user=>{
+        this.user.set(user);
+       setTimeout(()=>{res.next(user);},2000); 
+      })
+    }else{
+      setTimeout(()=>{res.next({
+        error: 'wrong password',
+        code: 401
+      });},2000);
     }
+    return res;
   }
   logout(){
     this.user.update(el=>(null));
@@ -19,7 +30,7 @@ export class LoginService {
     let res = new Subject();
     if(token === 'abcdefg123'){
       of({
-        name:'Jared Bodrik', role:'testee',photo:'https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png'
+        name:'Jared Bodrik',token:'abcdefg123', role:'testee',photo:'https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png'
       }).subscribe(user=>{
         this.user.set(user);
        setTimeout(()=>{res.next(user);},2000); 
