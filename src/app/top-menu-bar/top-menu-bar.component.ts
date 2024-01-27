@@ -6,6 +6,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { Router, RouterModule} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../login/login.service';
+import { TopMenuBarService } from './top-menu-bar.service';
 @Component({
   selector: 'app-top-menu-bar',
   standalone: true,
@@ -15,12 +16,13 @@ import { LoginService } from '../login/login.service';
 })
 export class TopMenuBarComponent {
   @Input() barType:'common'|'exam';
-  @Input() timer: string;
+  timer: Signal<string>;
   user:Signal<any>;
-  constructor(private loginSrv:LoginService,private route: Router ){
+  constructor(private loginSrv:LoginService,private route: Router, private barService:TopMenuBarService ){
     this.user = computed( () => {
       return loginSrv.user();
     })
+    this.timer = barService.timerTitle;
   }
   login(){
     if(this.user()){

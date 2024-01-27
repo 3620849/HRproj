@@ -1,0 +1,12 @@
+<div class="answer-component">
+    <app-video-input #videoInput (onRecordReady)="setUserChoise($event)" (onStartRecord)="startRecord()"></app-video-input>
+    <div class="video-controls-menu" [ngClass]="{'hide-controls':hideControls}">
+        <p-button  (click)="startRecord()" icon="pi pi-caret-right" [rounded]="true"></p-button>
+    </div>
+    <div class="video-controls-text" *ngIf="startCountdown" [ngClass]="{'move-top':moveTop}">
+        <div  (click)="startRecord()">{{questionText()}}</div>
+    </div>
+    <div class="blitz-timer" *ngIf="blitzTimer() > 0">
+        <p-button   [rounded]="true" severity="info">{{blitzTimer()}}</p-button>
+    </div>
+</div>

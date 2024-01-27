@@ -1,0 +1,12 @@
+<form *ngIf="data" [formGroup]="form">
+    <div class="text-component" formArrayName="myOptions">
+        @for(item of data.options; track item; let index = $index){
+            <div class="input-wraper">
+                <span class="p-float-label">
+                    <input pInputText type="text" [id]="'k'+index" [formControlName]="index"/>
+                    <label [for]="'k'+index">{{item}}</label>
+                </span>
+            </div>            
+        }
+    </div>
+</form>

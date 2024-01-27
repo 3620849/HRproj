@@ -1,0 +1,1 @@
+export type QuestionType = 'video'|'videoBlitz'|'checkboxSingle'|'checkboxMultiple'|'inputText'|'info';

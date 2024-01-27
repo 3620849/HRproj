@@ -1,0 +1,10 @@
+<form *ngIf="data" [formGroup]="form">
+    <div class="checkbox-component" formArrayName="myOptions">
+        @for(item of data.options; track item; let index = $index){
+            <div class="field-checkbox">
+                <p-radioButton  [inputId]="''+index" [value]="'userChoise'+index" [formControlName]="getControlName(data.type, index)"></p-radioButton>
+                <label [for]="'k'+index" class="ml-2">{{ item }}</label>
+            </div>
+        }
+    </div>
+</form>

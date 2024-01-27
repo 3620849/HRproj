@@ -1,0 +1,17 @@
+.answer-component{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    video{
+        max-width: 350px;
+        border-radius: 1rem;
+    }
+    .video-controls-menu{
+        position: absolute;
+    }
+    .hide-controls{
+        display: none;
+    }
+}

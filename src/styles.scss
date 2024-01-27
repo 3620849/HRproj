@@ -8,6 +8,7 @@ html {
 }
 
 body {
+    margin: 0;
     font-family: var(--font-family);
     font-weight: normal;
     background: var(--surface-ground);
@@ -16,6 +17,14 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+app-top-menu-bar{
+    p-toolbar{
+        .p-toolbar{
+            border: unset !important;
+        }
+    }
+    
+}
 .card {
     background: var(--surface-card);
     border-radius: 10px;
@@ -34,4 +43,22 @@ body {
             }
         }
     }
+}
+.question-card{
+    p-panel {
+        display: block;
+        .p-panel{
+            height: 100%;
+            display: flex;
+                flex-direction: column;
+            .p-toggleable-content{
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                .p-panel-content{
+                    flex:1
+                }
+            }
+        }
+    }  
 }

@@ -1,10 +1,14 @@
 .exam-component{
     display: flex;
     justify-content: center;
+    height: 100%;
     .exam-content{
+        height: 100%;
         display: flex;
-        justify-content: center;
-        flex-direction: column;
         
+        flex-direction: column;
+        app-question {
+            height: 100%;
+        }
     }
 }

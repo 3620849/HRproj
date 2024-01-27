@@ -1,9 +1,28 @@
-<div class="question-card">
-<p-fieldset [toggleable]="true" legend="Question">
-    <p class="m-0">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    </p>
-    <p-button label="Submit" [style]="{float:'right'}"></p-button>
-</p-fieldset>
+<div class="question-card h-full">
+    <p-panel class="h-full" >
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2 max-wid">
+                    <span class="font-bold">Question</span>
+                    <i *ngIf="data?.sec && data.sec!>-1" class="pi pi-clock mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="data?.sec+'sec'"></i>
+                </div>
+            </ng-template>
+            <div class="min-heigh">
+                <p class="m-0"  class="question-text" *ngIf="data && data?.type !=='videoBlitz'" >
+                    {{data.text}}
+            </p>
+            </div>
+        
+            <div class="content-container" [ngSwitch]="data?.type">
+                <app-video-blitz [data]="data"   (videoStarted)="started()" (userChoise)="setUserChoise($event)" *ngSwitchCase="'videoBlitz'"></app-video-blitz>
+                <app-video-answer (videoStarted)="started()" (userChoise)="setUserChoise($event)"  *ngSwitchCase="'video'" [data]="data"></app-video-answer>
+                <app-check-box-question  (userChoise)="setUserChoise($event)" [data]="data" *ngSwitchCase="'checkboxSingle'"></app-check-box-question>
+                <app-check-box-question (userChoise)="setUserChoise($event)" [data]="data" *ngSwitchCase="'checkboxMultiple'"></app-check-box-question>
+                <app-input-text-question (userChoise)="setUserChoise($event)" [data]="data" *ngSwitchCase="'inputText'"></app-input-text-question>
+            </div>
+            <ng-template pTemplate="footer" > 
+                <div class="flex flex-wrap align-items-center justify-content-between gap-3 h-3rem ">
+                    <p-button label="Submit"  (click)="submit()" [style]="{float:'right'}"></p-button>    
+                </div>
+            </ng-template>
+    </p-panel>
 </div>

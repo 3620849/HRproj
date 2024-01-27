@@ -1,7 +1,19 @@
 <div class="exam-component">
-    <app-intro *ngIf="showIntro" (startDemo)="startDemo()"></app-intro>
-    <div *ngIf="!showIntro" class="exam-content">
-        <app-answer></app-answer>
-        <app-question></app-question>
-    </div>    
+    @if(!data()){
+        loading...
+    } @else if(data()?.type === 'info'){
+        <div class="exam-content" *ngIf="data()?.type === 'info'">
+            <app-intro [data]="data()!" (submitEvent)="loadQuestion()">
+            </app-intro>
+        </div>   
+    }  @else {
+        <div class="exam-content">
+            <app-question 
+                [data]="data()!"
+                (getQuestion)="loadQuestion()"
+                (submitAnswer)="submitAnswer($event)">
+            </app-question>
+        </div>
+    }
+     
 </div>

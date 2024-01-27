@@ -1,3 +1,23 @@
 .question-card{
     max-width: 400px;
+    min-width: 350px;
+    height: 100%;
+    
+    
+    .image-title{
+        max-width: 300px;
+    }
+    .max-wid{
+        width: 100%;
+        justify-content: space-between;
+    }
+    .min-heigh{
+        .question-text{
+            margin-bottom: 10px;
+        }
+    }
+    
+    // .content-container{
+    //     height: calc(100vh - 370px);
+    // }
 }

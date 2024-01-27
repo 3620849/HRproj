@@ -1,0 +1,6 @@
+<div class="answer-component">
+    <app-video-input #videoInput (onRecordReady)="setUserChoise($event)" (onStartRecord)="startRecord()"></app-video-input>
+    <div class="video-controls-menu" [ngClass]="{'hide-controls':hideControls}">
+        <p-button  (click)="startRecord()" icon="pi pi-circle-fill" [rounded]="true"></p-button>
+    </div>
+</div>

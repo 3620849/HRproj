@@ -1,19 +1,22 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { QuestionData } from '../shared/model/question-data.model';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-intro',
   standalone: true,
-  imports: [CardModule,ButtonModule],
+  imports: [CommonModule,CardModule,ButtonModule],
   templateUrl: './intro.component.html',
   styleUrl: './intro.component.scss'
 })
 export class IntroComponent {
   @Output()
-  startDemo = new EventEmitter<boolean>();
+  submitEvent = new EventEmitter();
+  @Input()
+  data:QuestionData;
 
-  tryDemo(){
-    this.startDemo.emit(true);
+  submit(){
+    this.submitEvent.emit();
   }
-
 }
