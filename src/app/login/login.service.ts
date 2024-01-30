@@ -16,8 +16,8 @@ export class LoginService {
        setTimeout(()=>{res.next(user);},2000); 
       })
     }else{
-      setTimeout(()=>{res.next({
-        error: 'wrong password',
+      setTimeout(()=>{res.error({
+        error: 'wrong login or password',
         code: 401
       });},2000);
     }
