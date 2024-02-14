@@ -59,8 +59,8 @@ export class FormEditorComponent {
   buildForm(data:any){
     if(!data){
       this.form = new FormGroup({
-        title: this.fb.control('ololo',Validators.required),
-        company:this.fb.control('ololo',Validators.required),
+        title: this.fb.control('',Validators.required),
+        company:this.fb.control('',Validators.required),
         status: this.fb.control('',Validators.required),
         intro: new FormGroup({
           text: this.fb.control(this.defaultIntro,Validators.required)
@@ -102,7 +102,7 @@ export class FormEditorComponent {
     }
   }
   save(){
-    //todo send to server if no id create else update
+    //TODO send to server if no id create else update
     // console.log(this.form.value);    
   }
 
