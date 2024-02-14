@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { QuestionData } from '../shared/model/question-data.model';
+import { BaseFormComponent } from '../shared/model/base-form.component';
 declare var MediaRecorder: any;
 @Component({
   selector: 'app-video-blitz',
@@ -12,15 +13,11 @@ declare var MediaRecorder: any;
   templateUrl: './video-blitz.component.html',
   styleUrl: './video-blitz.component.scss'
 })
-export class VideoBlitzComponent {
-  @Input()
-  data:QuestionData;
+export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{  
   hideControls:boolean;
   @ViewChild(VideoInputComponent)
   videoInputComponent:VideoInputComponent;
   stopTimer:number;
-  @Output()
-  userChoise:EventEmitter<AnswerData> = new EventEmitter();
   @Output()
   videoStarted:EventEmitter<any> = new EventEmitter(); 
   questionText:WritableSignal<string> = signal<string>('');
@@ -29,10 +26,13 @@ export class VideoBlitzComponent {
   moveTop:boolean;
   blitzTimer:WritableSignal<number> = signal<number>(0);
   intervalId:any;
+  TIMEOUT_BETWEEN_QUESTIONS=5000;
   constructor() {
+    super()
   }
   ngOnChanges(changes: SimpleChanges): void {
     const d:any = changes['data'];
+    const a:any = changes['userAnswer'];
     if(d && d['currentValue']){
       const data = d['currentValue'];
       if(this.data.type === 'videoBlitz'){
@@ -41,9 +41,23 @@ export class VideoBlitzComponent {
         },0)*1000;
       }
     }
+    if(a){
+      this.hideControls = true;
+      this.setAnswers();
+    }
   }
-  ngOnInit(){
-    console.log('init');    
+  override setAnswers(): void {  
+    setTimeout(()=>{ 
+      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].video);  
+      this.moveTop = true; 
+    }); 
+  }
+  ngOnInit(): void {
+    setTimeout(()=>{
+      if(!this.userAnswer){
+        this.videoInputComponent.onStart();
+      }
+    }) 
   }
 
   startRecord(){
@@ -59,6 +73,7 @@ export class VideoBlitzComponent {
     let answer:AnswerData = {
       id: this.data.id,
       text: this.data.text,
+      questions:this.data.options,
       answerOptions:[{video:$event}]
     }
     this.userChoise.emit(answer);
@@ -89,5 +104,29 @@ export class VideoBlitzComponent {
         this.blitzTimer.update(val=>val-1);
       },1000)
     },5000)
+  }
+  setCurrentVideoTime($event:number){
+    if(this.userAnswer){
+      const index = this.getIndexByTime($event);
+      if(this.data && this.data.options){
+        this.questionText.set(this.data.options[index]!.text);
+      }      
+    }
+  }
+  getIndexByTime(time:number):number{
+    let index = 0;
+    const timeSpace = this.TIMEOUT_BETWEEN_QUESTIONS/1000;
+    if(time< timeSpace+1){
+      return index;
+    }
+    const arr = this.data.options!;
+    for(let i = 1, timePassed = timeSpace+arr[0].sec;i<arr!.length;++i){
+      timePassed += timeSpace+arr[0].sec;
+      if(time<timePassed){
+        index = i;
+        break;
+      }
+    }
+    return index;
   }
 }

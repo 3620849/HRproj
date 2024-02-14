@@ -1,0 +1,22 @@
+@if(answersStore.isLoading()){
+    <div>loading...</div>
+} @else {
+    <p-table [value]="answersStore.answers()!.list"   [rowHover]="true" >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Time ago</th>
+                <th>Status</th>
+                <th>Review</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td><p-button (click)="goTo(product.id)" >{{product.name}}</p-button></td>
+                <td><p-chip class="chip-cls" [label]="product.date | dateAgo"></p-chip></td>
+                <td><p-tag [value]="product.status" [severity]="getSeverity(product.status)"></p-tag></td>
+                <td><p-rating [ngModel]="product.review" [readonly]="false" [cancel]="false"></p-rating></td>
+            </tr>
+        </ng-template>
+</p-table>
+}

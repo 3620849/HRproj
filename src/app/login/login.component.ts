@@ -1,4 +1,4 @@
-import { Component, computed, effect } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -9,38 +9,36 @@ import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-
+import { UserStore } from '../shared/store/user.store';
+import { getState } from '@ngrx/signals';
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [ToastModule,ButtonModule, FormsModule,CheckboxModule,InputTextModule,PasswordModule,DividerModule],
-  //providers: [MessageService],
+  
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   pass:string;
   mail:string;
+  readonly store = inject(UserStore);
 
   constructor(private loginSrv:LoginService,private router: Router,private route: ActivatedRoute,private messageService: MessageService){
     effect(()=>{
-      let user = this.loginSrv.user();
-      if(user && user.role === 'admin'){
+      const state = getState(this.store);
+      let user = state.user;
+      if(user){
         if(route.snapshot.url.join('').includes('login')){
           router.navigateByUrl('/admin');
         }
+      } 
+      if(state.error) {
+        this.messageService.add({ severity: 'error', summary: 'Error', detail:state.error});
       }
     })
   }
   login(){
-    this.loginSrv.login(this.mail,this.pass)
-    .subscribe({
-      next:()=>{
-        this.router.navigateByUrl('/admin');
-      },
-      error:err=>{
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error});
-      }
-    });
+    this.store.loadUser(this.mail,this.pass);
   }
 }

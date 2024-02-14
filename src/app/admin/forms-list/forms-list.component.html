@@ -1,0 +1,43 @@
+@if(formsListStore.isLoading()){
+    <div>loading...</div>
+} @else {
+    <p-table [value]="formsListStore.forms()!.list" [tableStyle]="{'min-width': '60rem'}">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                Forms
+                <p-button [routerLink]="['./editor']" icon="pi pi-plus"></p-button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Title</th>
+                <th>Logo</th>
+                <th>Link</th>
+                <th>Company</th>
+                <th>Reviews</th>
+                <th>Status</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                <td>{{product.title}}</td>
+                <td><img [src]="product.logo" [alt]="product.name" width="50" class="shadow-4" /></td>
+                <td>
+                    <p-inputGroup>
+                        <input  pInputText disabled="true" type="text"  class="p-inputtext-sm"  [style]="{'width':'30px','height':'27px'}" [value]="product.link" placeholder="Keyword" />
+                        <button type="button"  [style]="{'height':'27px'}" (click)="saveToBuffer(product.link)" pButton icon="pi pi-copy" class="p-button-warning"></button>
+                    </p-inputGroup>
+                </td>
+                <td>{{product.company}}</td>
+                <td><p-avatar icon="pi pi-inbox" pBadge (click)="gotToAnsers(product.id)" [value]="product.reviews" severity="success" styleClass="mr-2" size="large"></p-avatar></td>
+                <td><p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag></td>
+                <td><button pButton pRipple type="button" icon="pi pi-pencil" (click)="editExam(product.id)" class="p-button-rounded p-button-text"></button></td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{formsListStore.forms()!.list ? formsListStore.forms()!.total : 0 }} products.
+            </div>
+        </ng-template>
+    </p-table>
+}

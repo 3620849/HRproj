@@ -1,5 +1,6 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Observable, Subject, of ,map} from 'rxjs';
+import { User } from '../shared/model/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,17 +8,16 @@ import { Observable, Subject, of ,map} from 'rxjs';
 export class LoginService {
   user:WritableSignal<any> = signal(null);
   constructor() { }
-  login(email:string,pass:string):Observable<any>{
-    let res = new Subject();
+  login(email:string,pass:string):Observable<User>{
+    let res = new Subject<User>();
     if(email==='a@gmail.com' && pass==='123'){
       of({name:'Amy Elsner',token:'1flkgjfdldsfsioerwijdkvlfmv', role:'admin',photo:'https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png'})
       .subscribe(user=>{
-        this.user.set(user);
        setTimeout(()=>{res.next(user);},2000); 
       })
     }else{
       setTimeout(()=>{res.error({
-        error: 'wrong login or password',
+        message: 'wrong login or password',
         code: 401
       });},2000);
     }
@@ -26,6 +26,7 @@ export class LoginService {
   logout(){
     this.user.update(el=>(null));
   }
+  
   testeeLogin(token:string):Observable<any>{
     let res = new Subject();
     if(token === 'abcdefg123'){

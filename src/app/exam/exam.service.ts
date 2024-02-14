@@ -15,11 +15,10 @@ export class ExamService {
       {id:"b2a",text:'What color is best?', sec:10},
       {id:"c3a",text:'How many people was in the team?', sec:5},
       {id:"d4a",text:'What is your strength?', sec:5}],total:6,oder:1},
-    // {id:'a1b3c',sec:15, startOnShow:false,type:'video',text:'Please brifly describe your experience on previouse place of work.',total:6,oder:2},          
-    // {id:'x1b4x',type:'inputText', startOnShow:false, text:'Please write your name and second name', options:['Name','Second Name'],total:6,oder:1},
-    // {id:'a4b1c',sec:30, startOnShow:true, type:'checkboxSingle', text:'What is the capital of Great britain?', options:['London','Kiev','Tel-Aviv'],total:6,oder:3},
-    // {id:'d1b5c',sec:30, startOnShow:true, type:'checkboxMultiple', text:'Select right answers', options:['Steal money is good','I never steal money','Better not steal money'],total:6,oder:4},
-    // {id:'a1b3c',sec:15, startOnShow:false,type:'video',text:'Please brifly describe your experience on previouse place of work.',total:6,oder:5},
+      {id:'a1b3c',sec:15, startOnShow:false,type:'video',text:'Please brifly describe your experience on previouse place of work.',total:6,oder:2},          
+      {id:'x1b4x',type:'inputText', startOnShow:false, text:'Please write your name and second name', options:['Name','Second Name'],total:6,oder:1},
+      {id:'a4b1c',sec:30, startOnShow:true, type:'checkboxSingle', text:'What is the capital of Great britain?', options:['London','Kiev','Tel-Aviv'],total:6,oder:3},
+      {id:'d1b5c',sec:30, startOnShow:true, type:'checkboxMultiple', text:'Select right answers', options:['Steal money is good','I never steal money','Better not steal money'],total:6,oder:4},
     {id:'fdgfg',noControl:true, sec:-1,type:'info', title:"Finish", subheader:'well done', img:'https://t3.ftcdn.net/jpg/02/91/52/22/360_F_291522205_XkrmS421FjSGTMRdTrqFZPxDY19VxpmL.jpg',text:'We will contact you after reivew.'},
   ]
 

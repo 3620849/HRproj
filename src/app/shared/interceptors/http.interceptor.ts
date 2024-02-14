@@ -1,9 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import {
   HttpRequest,
-  HttpHandler,
   HttpEvent,
-  HttpInterceptor,
   HttpInterceptorFn,
   HttpHandlerFn
 } from '@angular/common/http';
@@ -19,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (
   if (token) {
     const cloned = req.clone({
       setHeaders: {
-        authorization: token,
+        Authorization: token,
       },
     });
     return next(cloned);

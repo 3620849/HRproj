@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { QuestionType } from '../shared/model/question-type.model';
-import { AnswerData } from '../shared/model/answer-data.model';
+import { AnswerData, AnswerOptions } from '../shared/model/answer-data.model';
+import { BaseFormComponent } from '../shared/model/base-form.component';
 @Component({
   selector: 'app-check-box-question',
   standalone: true,
@@ -12,30 +13,27 @@ import { AnswerData } from '../shared/model/answer-data.model';
   templateUrl: './check-box-question.component.html',
   styleUrl: './check-box-question.component.scss'
 })
-export class CheckBoxQuestionComponent implements OnChanges{
-  @Input()
-  data:QuestionData;
-  form:FormGroup;
-  @Output()
-  userChoise:EventEmitter<AnswerData> = new EventEmitter();
+export class CheckBoxQuestionComponent extends BaseFormComponent implements OnChanges{
   
   constructor(private fb: FormBuilder) { 
+    super();
     this.form = new FormGroup({
       myOptions: this.fb.array([])
     })
     this.form.valueChanges.subscribe(chan=>{
-      const userAnswersOp:any = [];
+      const userAnswersOp:AnswerOptions[] = [];
+      const userAnswersIndexes:number[] = [];
       chan.myOptions.forEach((el:string) => {
         const indexOfAnswer = el.indexOf('userChoise');
         if(indexOfAnswer > -1) {
           const index = el.substring(indexOfAnswer+10,el.length);
-          userAnswersOp.push(index);
+          userAnswersIndexes.push(+index);
         }
       })
 
-      userAnswersOp.forEach((answer:number,index:number)=>{
+      userAnswersIndexes.forEach((answer:number,index:number)=>{
         if(this.data.options && this.data.options.length>0){
-          userAnswersOp[index] = this.data.options[answer];
+          userAnswersOp[index] = {text:this.data.options[answer]};
         }        
       })
      const res: AnswerData = {
@@ -49,11 +47,32 @@ export class CheckBoxQuestionComponent implements OnChanges{
   }
   ngOnChanges(changes: SimpleChanges): void {
     const d:any = changes['data'];
+    const a:any = changes['userAnswer'];
     if(d && d['currentValue']){
       const data = d['currentValue'];
       if( data.options && data.options.length > 0){  
         this.buildForm();
       }      
+    }
+    if(a && this.data){
+      this.setAnswers();
+    }
+  }
+  setAnswers(){
+    if(this.userAnswer){
+      this.form.disable();
+      const userAnswerOtions:any = {}
+      this.userAnswer.answerOptions.forEach(el=>{if(el.text){userAnswerOtions[el.text]=true}});
+      this.data.options?.forEach((el,index) => {
+        if(userAnswerOtions[el]){
+          if(this.data.type==='checkboxSingle'){
+            this.optionss.patchValue(['userChoise'+index]);
+          }
+          if(this.data.type==='checkboxMultiple'){
+            this.optionss.at(index).patchValue(['userChoise'+index])
+          }
+        }
+      });   
     }
   }
 
@@ -69,7 +88,7 @@ export class CheckBoxQuestionComponent implements OnChanges{
       })
     }
   }
-  get optionss() {
+  get optionss():FormArray {
     const res =  this.form.get('myOptions') as FormArray; 
     return res;
   } 

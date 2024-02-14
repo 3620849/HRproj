@@ -60,12 +60,13 @@ export class QuestionComponent implements OnInit, OnChanges {
       }
     }
   }
-  userAnswer:AnswerData;
+  userAnswer:AnswerData|null;
   setUserChoise($event:any){
     this.userAnswer = $event;
   }
   submit(){
     this.submitAnswer.emit(this.userAnswer);
+    this.userAnswer =  null;
   }
   ngOnInit(){
     //this.getQuestion.emit(true)

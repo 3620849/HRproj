@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { QuestionData } from '../shared/model/question-data.model';
+import { BaseFormComponent } from '../shared/model/base-form.component';
 declare var MediaRecorder: any;
 @Component({
   selector: 'app-video-answer',
@@ -12,17 +13,35 @@ declare var MediaRecorder: any;
   templateUrl: './video-question.component.html',
   styleUrl: './video-question.component.scss'
 })
-export class VideoQuestionComponent   {
-  @Input()
-  data:QuestionData;
+export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
+  ngOnChanges(changes: SimpleChanges): void {
+    const a:any = changes['userAnswer'];
+    if(a){
+      this.hideControls = true;
+      this.setAnswers();
+    }
+  }
+  override setAnswers(): void {  
+    setTimeout(()=>{ 
+      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].video);   
+    }); 
+  }
+
   hideControls:boolean;
   @ViewChild(VideoInputComponent)
   videoInputComponent:VideoInputComponent;
   @Output()
-  userChoise:EventEmitter<AnswerData> = new EventEmitter();
-  @Output()
   videoStarted:EventEmitter<any> = new EventEmitter();
   constructor() {
+    super();
+  }
+  ngOnInit(): void {
+    setTimeout(()=>{
+      if(!this.userAnswer){
+        this.videoInputComponent.onStart();
+      }
+    }) 
+   
   }
 
   startRecord(){

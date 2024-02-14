@@ -5,6 +5,7 @@ import { FormArray, FormBuilder, FormGroup,ReactiveFormsModule} from '@angular/f
 import { QuestionType } from '../shared/model/question-type.model';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { InputTextModule } from 'primeng/inputtext';
+import { BaseFormComponent } from '../shared/model/base-form.component';
 @Component({
   selector: 'app-input-text-question',
   standalone: true,
@@ -12,14 +13,9 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './input-text-question.component.html',
   styleUrl: './input-text-question.component.scss'
 })
-export class InputTextQuestionComponent  implements OnChanges{
-  @Input()
-  data:QuestionData;
-  form:FormGroup;
-  @Output()
-  userChoise:EventEmitter<AnswerData> = new EventEmitter();
-  
-  constructor(private fb: FormBuilder) { 
+export class InputTextQuestionComponent extends BaseFormComponent  implements OnChanges{
+  constructor(private fb: FormBuilder) {
+    super(); 
     this.form = new FormGroup({
       myOptions: this.fb.array([])
     })
@@ -44,11 +40,15 @@ export class InputTextQuestionComponent  implements OnChanges{
   }
   ngOnChanges(changes: SimpleChanges): void {
     const d:any = changes['data'];
+    const a:any = changes['userAnswer'];
     if(d && d['currentValue']){
       const data = d['currentValue'];
       if( data.options && data.options.length > 0){  
         this.buildForm();
       }      
+    }
+    if(a && this.data){
+      this.setAnswers();
     }
   }
 
@@ -69,5 +69,13 @@ export class InputTextQuestionComponent  implements OnChanges{
       return '0';
     }
     return ''+index;
+  }
+  override setAnswers(): void {
+    if(this.userAnswer){
+      this.form.disable();
+      this.userAnswer.answerOptions?.forEach((el,index) => {
+        this.optionss.at(index).patchValue(el.text)
+      })
+    }
   }
 }

@@ -1,1 +1,1 @@
-<video #video [muted]="mutedOnRecord" [controls]="recordedChunks.length > 0" autoplay style="height:100%; min-height: 50vh; width: auto; min-width: 50vw;" playsinline></video>
+<video #video [muted]="mutedOnRecord" [controls]="recordedChunks.length > 0 || userAnswerSrc" [autoplay]="autoplayVal"  playsinline></video>

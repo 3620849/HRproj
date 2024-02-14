@@ -22,16 +22,20 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   mutedOnRecord:boolean = true;
   videoStream:MediaStream;
   audioStream:MediaStream;
+  autoplayVal:boolean = true;
+  userAnswerSrc:boolean;
   @Output()
   onStartRecord:EventEmitter<any> = new EventEmitter();
   @Output()
   onRecordReady:EventEmitter<any> = new EventEmitter();
   @Output()
   onStreamReady:EventEmitter<any> = new EventEmitter();
+  @Output()
+  currentTime:EventEmitter<number> = new EventEmitter();
   constructor(@Inject(PLATFORM_ID) private _platform: Object) {
   }
   ngOnInit(){
-    this.onStart();
+     
   }
   async onStart(){
     if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
@@ -58,6 +62,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.audioStream?.getTracks()?.forEach(t=>t.stop());
     this.video.nativeElement.src='';
     this.video.nativeElement.srcObject = null;
+    this.video.nativeElement.removeEventListener("timeupdate",this.currTimeFn.bind(this));
   }
   startRecord(){
     this.mutedOnRecord = true;
@@ -111,5 +116,15 @@ registerVideoRecordingEvent() {
       alert(error);
   }
 }
-  
+ setSrc(src:string){
+  this.userAnswerSrc = true;
+  this.autoplayVal = false;
+  this.video.nativeElement.src = src;
+  this.currentTime.emit(0);
+  this.video.nativeElement.addEventListener("timeupdate", this.currTimeFn.bind(this))
+ }
+
+  currTimeFn(){
+    this.currentTime.emit(this.video.nativeElement.currentTime)
+  }
 }
