@@ -14,7 +14,7 @@ export class IntroComponent {
   @Output()
   submitEvent = new EventEmitter();
   @Input()
-  data:QuestionData;
+  data:QuestionData|undefined;
 
   submit(){
     this.submitEvent.emit();

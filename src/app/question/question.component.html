@@ -3,7 +3,7 @@
             <ng-template pTemplate="header">
                 <div class="flex align-items-center gap-2 max-wid">
                     <span class="font-bold">Question</span>
-                    <i *ngIf="data?.sec && data.sec!>-1" class="pi pi-clock mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="data?.sec+'sec'"></i>
+                    <i *ngIf="data?.sec && data.sec!>-1" class="pi pi-clock mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="questionData?.sec+'sec'"></i>
                 </div>
             </ng-template>
             <div class="min-heigh">
@@ -12,7 +12,7 @@
             </p>
             </div>
         
-            <div class="content-container" [ngSwitch]="data?.type">
+            <div class="content-container" [ngSwitch]="questionData?.type">
                 <app-video-blitz [data]="data"   (videoStarted)="started()" (userChoise)="setUserChoise($event)" *ngSwitchCase="'videoBlitz'"></app-video-blitz>
                 <app-video-answer (videoStarted)="started()" (userChoise)="setUserChoise($event)"  *ngSwitchCase="'video'" [data]="data"></app-video-answer>
                 <app-check-box-question  (userChoise)="setUserChoise($event)" [data]="data" *ngSwitchCase="'checkboxSingle'"></app-check-box-question>

@@ -35,7 +35,7 @@ import { AnswerData } from '../../shared/model/answer-data.model';
 })
 export class AnswerComponent {
   //TODO move this to admin service
-  answers:{answer:AnswerData, question:QuestionData}[] = [
+  answers:{answer:AnswerData, question:QuestionData|undefined}[] = [
     {
       answer: {"id": "xd1b3c","answerOptions":[{text:"Tel-Aviv"}]},
       question:{id:'a4b1c',sec:30, startOnShow:true, type:'checkboxSingle', text:'What is the capital of Great britain?', options:['London','Kiev','Tel-Aviv'],total:6,oder:3},

@@ -74,4 +74,7 @@ export class QuestionComponent implements OnInit, OnChanges {
   started(){
     this.barService.startTimer();
   }
+  get questionData():QuestionData|undefined{
+    return this.data;
+  }
 }

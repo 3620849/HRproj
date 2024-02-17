@@ -4,7 +4,7 @@
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2 max-wid">
                         <span class="font-bold">Question</span>
-                        <i *ngIf="data.question.sec && data.question.sec!>-1" class="pi pi-clock mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="data.question?.sec+'sec'"></i>
+                        <i *ngIf="data.question?.sec && data.question?.sec!>-1" class="pi pi-clock mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="data.question?.sec+'sec'"></i>
                     </div>
                 </ng-template>
                 <div class="min-heigh">
@@ -13,11 +13,11 @@
                 </p>
                 </div>
     <div class="content-container" [ngSwitch]="data.question?.type">
-        <app-video-blitz [userAnswer]="data.answer" [data]="data.question" *ngSwitchCase="'videoBlitz'"></app-video-blitz>
-        <app-video-answer [userAnswer]="data.answer" [data]="data.question" *ngSwitchCase="'video'" ></app-video-answer>
-        <app-check-box-question [userAnswer]="data.answer" [data]="data.question" *ngSwitchCase="'checkboxSingle'"></app-check-box-question>
-        <app-check-box-question [userAnswer]="data.answer" [data]="data.question" *ngSwitchCase="'checkboxMultiple'"></app-check-box-question>
-        <app-input-text-question [userAnswer]="data.answer" [data]="data.question" *ngSwitchCase="'inputText'"></app-input-text-question>
+        <app-video-blitz [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'videoBlitz'"></app-video-blitz>
+        <app-video-answer [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'video'" ></app-video-answer>
+        <app-check-box-question [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'checkboxSingle'"></app-check-box-question>
+        <app-check-box-question [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'checkboxMultiple'"></app-check-box-question>
+        <app-input-text-question [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'inputText'"></app-input-text-question>
     </div>
 </p-panel>
 </div>
