@@ -1,6 +1,8 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Observable, Subject, of ,map} from 'rxjs'; 
 import { AnswesListResponse, FormResponse } from './model/form.model';
+import { AnswerData, AnswerReviewResponse } from '../shared/model/answer-data.model';
+import { QuestionData } from '../shared/model/question-data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +73,37 @@ export class AdminService {
     }
   ]}
 
+  testeeAnswers: AnswerReviewResponse = {
+    list: [
+      {
+        answer: { "id": "xd1b3c", "answerOptions": [{ text: "Tel-Aviv" }] },
+        question: { id: 'a4b1c', sec: 30, startOnShow: true, type: 'checkboxSingle', text: 'What is the capital of Great britain?', options: ['London', 'Kiev', 'Tel-Aviv'], total: 6, oder: 3 },
+      },
+      {
+        answer: { "id": "xd1b3c", "answerOptions": [{ text: 'I never steal money' }, { text: 'Better not steal money' }] },
+        question: { id: 'd1b5c', sec: 15, startOnShow: true, type: 'checkboxMultiple', text: 'Select right answers', options: ['Steal money is good', 'I never steal money', 'Better not steal money'], total: 6, oder: 4 },
+      },
+      {
+        answer: { "id": "x1b4x", "answerOptions": [{ text: 'Dima' }, { text: 'Shanin' }] },
+        question: { id: 'x1b4x', type: 'inputText', startOnShow: false, text: 'Please write your name and second name', options: ['Name', 'Second Name'], total: 6, oder: 1 },
+      },
+      {
+        answer: { "id": "x1b4x", "answerOptions": [{ video: 'https://www.w3schools.com/html/mov_bbb.mp4' }] },
+        question: { id: 'a1b3c', sec: 15, startOnShow: false, type: 'video', text: 'Please brifly describe your experience on previouse place of work.', total: 6, oder: 2 },
+      },
+      {
+        answer: { "id": "x1b4x", "answerOptions": [{ video: 'https://www.w3schools.com/html/mov_bbb.mp4' }] },
+        question: {
+          id: 'xd1b3c', startOnShow: false, type: 'videoBlitz', text: 'Please press start button when you will be ready', options: [
+            { id: "a1a", text: 'What is your name?', sec: 5 },
+            { id: "b2a", text: 'What color is best?', sec: 10 },
+            { id: "c3a", text: 'How many people was in the team?', sec: 5 },
+            { id: "d4a", text: 'What is your strength?', sec: 5 }], total: 6, oder: 1
+        }
+      }
+    ]
+  }
+
     constructor() { }
 
     loadAnswersList(id: string, ofset: number, size: number):Observable<AnswesListResponse> {
@@ -89,10 +122,10 @@ export class AdminService {
        return s;
     }
 
-    loadTesteeAnswers(id: string):Observable<AnswesListResponse> {
-      let s = new Subject<AnswesListResponse>();
+    loadTesteeAnswers(id: string):Observable<AnswerReviewResponse> {
+      let s = new Subject<AnswerReviewResponse>();
       setTimeout(()=>{
-        s.next( this.answers)
+        s.next( this.testeeAnswers)
       },500)
        return s;
     }

@@ -5,7 +5,6 @@ import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { LoginService } from './login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -24,7 +23,7 @@ export class LoginComponent {
   mail:string;
   readonly store = inject(UserStore);
 
-  constructor(private loginSrv:LoginService,private router: Router,private route: ActivatedRoute,private messageService: MessageService){
+  constructor(private router: Router,private route: ActivatedRoute,private messageService: MessageService){
     effect(()=>{
       const state = getState(this.store);
       let user = state.user;

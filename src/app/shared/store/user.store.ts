@@ -26,7 +26,7 @@ type UserState = {
             patchState(store, { user, isLoading: false,error:null });
           },error:error=>{
             localStorage.removeItem('user');
-            patchState(store, { user:null, isLoading: false , error:error.message});
+            patchState(store, { user:null, isLoading: false , error:error.error.message});
           }})
         },
         logout(){
