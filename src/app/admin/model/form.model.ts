@@ -7,7 +7,7 @@ export class Form {
     logo:string;
     reviews: number;
     company: string;
-    inventoryStatus: string;
+    status: string;
 }
 export class FormResponse{
     list:Form[];

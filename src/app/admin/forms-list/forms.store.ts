@@ -19,9 +19,9 @@ type FormState = {
     { providedIn: 'root' },
     withState(initialState),
     withMethods((store, adminService = inject(AdminService)) => ({
-        loadForms(ofset:number, size:number){
+        loadForms(offset:number, size:number){
           patchState(store, { isLoading: true});
-          adminService.loadForms(ofset,size).subscribe({next:(formResp:FormResponse)=>{ 
+          adminService.loadForms(offset,size).subscribe({next:(formResp:FormResponse)=>{ 
             patchState(store, { forms:formResp, isLoading: false });
           },error:error=>{
             patchState(store, { forms:null, isLoading: false , error:error.message});

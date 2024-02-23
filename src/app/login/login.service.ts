@@ -2,7 +2,7 @@ import { Injectable, WritableSignal, signal } from '@angular/core';
 import { Observable, Subject, of ,map} from 'rxjs';
 import { User } from '../shared/model/user.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

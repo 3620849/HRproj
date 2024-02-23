@@ -102,8 +102,7 @@ export class FormEditorComponent {
     }
   }
   save(){
-    //TODO send to server if no id create else update
-    // console.log(this.form.value);    
+    console.log(this.form.value);    
   }
 
 }

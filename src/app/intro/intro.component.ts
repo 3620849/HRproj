@@ -15,7 +15,12 @@ export class IntroComponent {
   submitEvent = new EventEmitter();
   @Input()
   data:QuestionData|undefined;
-
+  ngOnInit(){
+    setTimeout(()=>{
+      console.log(this.data);
+      
+    },2000);
+  }
   submit(){
     this.submitEvent.emit();
   }

@@ -3,6 +3,8 @@ import { Observable, Subject, of ,map} from 'rxjs';
 import { AnswesListResponse, FormResponse } from './model/form.model';
 import { AnswerData, AnswerReviewResponse } from '../shared/model/answer-data.model';
 import { QuestionData } from '../shared/model/question-data.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,7 @@ export class AdminService {
         logo:'https://smallbiztrends.com/ezoimgfmt/media.smallbiztrends.com/2019/10/fedex-2-850x311.png?ezimgfmt=rs:345x131/rscb12/ngcb12/notWebP',
         reviews:15,
         company: 'FEDEX',
-        inventoryStatus: 'ACTIVE',
+        status: 'ACTIVE',
     },{
       id: '1fgdfg',
       link:'https://69f2-46-117-191-114.ngrok-free.app/#/exam/abcdefg123',
@@ -27,7 +29,7 @@ export class AdminService {
       logo:'https://smallbiztrends.com/ezoimgfmt/media.smallbiztrends.com/2019/10/fedex-2-850x311.png?ezimgfmt=rs:345x131/rscb12/ngcb12/notWebP',
       reviews:135,
       company: 'FEDEX',
-      inventoryStatus: 'ACTIVE',
+      status: 'ACTIVE',
     },{
         id: '100gf1',
         title: 'Janitor',
@@ -35,7 +37,7 @@ export class AdminService {
         link:'https://69f2-46-117-191-114.ngrok-free.app/#/exam/abcdefg123',
         reviews:4,
         company: 'Lorem',
-        inventoryStatus: 'SUSPENDED'
+        status: 'SUSPENDED'
     },{
       id: '100gf1',
       title: 'Catering',
@@ -43,7 +45,7 @@ export class AdminService {
       link:'https://69f2-46-117-191-114.ngrok-free.app/#/exam/abcdefg123',
       reviews:4,
       company: 'LOT',
-      inventoryStatus: 'DONE'
+      status: 'DONE'
     }]
   };
   answers = {
@@ -104,29 +106,17 @@ export class AdminService {
     ]
   }
 
-    constructor() { }
+    constructor(private http:HttpClient) { }
 
-    loadAnswersList(id: string, ofset: number, size: number):Observable<AnswesListResponse> {
-      let s = new Subject<AnswesListResponse>();
-      setTimeout(()=>{
-        s.next( this.answers)
-      },500)
-       return s;
+    loadAnswersList(id: string, offset: number, size: number):Observable<AnswesListResponse> {
+      return this.http.get<AnswesListResponse>(environment.api+"/answers/"+id+"?offset="+offset+"&size="+size)
     }
 
-    loadForms(ofset:number,size:number):Observable<FormResponse>{
-      let s = new Subject<FormResponse>();
-      setTimeout(()=>{
-        s.next( this.forms)
-      },500)
-       return s;
+    loadForms(offset:number,size:number):Observable<FormResponse>{
+     return this.http.get<FormResponse>(environment.api+"/forms?offset="+offset+"&size="+size)
     }
 
     loadTesteeAnswers(id: string):Observable<AnswerReviewResponse> {
-      let s = new Subject<AnswerReviewResponse>();
-      setTimeout(()=>{
-        s.next( this.testeeAnswers)
-      },500)
-       return s;
+      return this.http.get<AnswerReviewResponse>(environment.api+"/answer/"+id)
     }
 }

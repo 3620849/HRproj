@@ -30,7 +30,7 @@
                 </td>
                 <td>{{product.company}}</td>
                 <td><p-avatar icon="pi pi-inbox" pBadge (click)="gotToAnsers(product.id)" [value]="product.reviews" severity="success" styleClass="mr-2" size="large"></p-avatar></td>
-                <td><p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)"></p-tag></td>
+                <td><p-tag [value]="product.status" [severity]="getSeverity(product.status)"></p-tag></td>
                 <td><button pButton pRipple type="button" icon="pi pi-pencil" (click)="editExam(product.id)" class="p-button-rounded p-button-text"></button></td>
             </tr>
         </ng-template>
