@@ -1,6 +1,6 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals'; 
 import { inject } from '@angular/core';
-import { FormResponse } from '../model/form.model';
+import { Form, FormResponse } from '../model/form.model';
 import { AdminService } from '../admin.service';
 
 type FormState = {
@@ -22,6 +22,13 @@ type FormState = {
         loadForms(offset:number, size:number){
           patchState(store, { isLoading: true});
           adminService.loadForms(offset,size).subscribe({next:(formResp:FormResponse)=>{ 
+            const urlPrefix = window.location.host + '/#/exam/';
+            formResp.list = formResp.list.map(el=>{
+              return {
+              ...el ,  
+              link:urlPrefix+el.link
+            }})
+
             patchState(store, { forms:formResp, isLoading: false });
           },error:error=>{
             patchState(store, { forms:null, isLoading: false , error:error.message});

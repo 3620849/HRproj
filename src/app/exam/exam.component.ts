@@ -1,4 +1,4 @@
-import { Component, Signal, WritableSignal, signal } from '@angular/core';
+import { Component, Signal, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoginService } from '../login/login.service';
 import { IntroComponent } from '../intro/intro.component';
@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { ExamService } from './exam.service';
 import { TopMenuBarService } from '../top-menu-bar/top-menu-bar.service';
 import { QuestionData } from '../shared/model/question-data.model';
+import { ExamStore } from './exam.store';
+import { getState } from '@ngrx/signals';
 
 @Component({
     selector: 'app-exam',
@@ -16,33 +18,33 @@ import { QuestionData } from '../shared/model/question-data.model';
     imports: [CommonModule, IntroComponent, QuestionComponent]
 })
 export class ExamComponent {
-  token:string;
+  link:string;
+  readonly examStore = inject(ExamStore);
   data:WritableSignal<QuestionData|null>= signal(null);
   constructor(private route: ActivatedRoute,
      private loginSrv: LoginService,
      private examSrv: ExamService,
      private barService:TopMenuBarService) {
-     }
-  ngOnInit(): void {
-    this.token = ''+this.route.snapshot.paramMap.get('id');
-    this.barService.setTimer(-1);
-    if(this.token){
-    this.loginSrv.testeeLogin(this.token).subscribe((user)=>{
-        if(user.error){
-          this.data.set({type:'info',text:user.error, noControl:true, img:'https://cdn-icons-png.flaticon.com/512/5741/5741824.png'})
-        }else{
-          this.loadQuestion();
+      effect(() => {
+        const state = getState(this.examStore);
+        const index = state.currentQuestionIndex;
+        if( state.form && state.form.questions){
+          let q = state.form!.questions![index];
+          this.data.set(q);
         }
-        
-    });
-    }    
+      },{allowSignalWrites:true})
   }
+
+  ngOnInit(): void {
+    this.link = ''+this.route.snapshot.paramMap.get('id');
+    this.barService.setTimer(-1);
+    if(this.link){
+      this.examStore.loadForm(this.link);
+    }   
+  }
+
   loadQuestion(){
-    const data = this.examSrv.getQuestion(this.token);
-    if(data && data.type === 'info'){
-      this.barService.setTimer(data.sec);
-    }
-    this.data.set(data);    
+    this.examStore.getQuestion();    
   }
   submitAnswer($event?:any){
     this.examSrv.sendAnswer($event)

@@ -7,12 +7,12 @@
                 </div>
             </ng-template>
             <div class="min-heigh">
-                <p class="m-0"  class="question-text" *ngIf="data && data?.type !=='videoBlitz'" >
+                <p class="m-0"  class="question-text" *ngIf="data && data?.questionType !=='videoBlitz'" >
                     {{data.text}}
             </p>
             </div>
         
-            <div class="content-container" [ngSwitch]="questionData?.type">
+            <div class="content-container" [ngSwitch]="questionData?.questionType">
                 <app-video-blitz [data]="data"   (videoStarted)="started()" (userChoise)="setUserChoise($event)" *ngSwitchCase="'videoBlitz'"></app-video-blitz>
                 <app-video-answer (videoStarted)="started()" (userChoise)="setUserChoise($event)"  *ngSwitchCase="'video'" [data]="data"></app-video-answer>
                 <app-check-box-question  (userChoise)="setUserChoise($event)" [data]="data" *ngSwitchCase="'checkboxSingle'"></app-check-box-question>

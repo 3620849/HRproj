@@ -3,7 +3,7 @@ import { Component, ElementRef, EventEmitter, Inject, Input, NgZone, OnChanges, 
 import { ButtonModule } from 'primeng/button';
 import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
-import { QuestionData } from '../shared/model/question-data.model';
+import { Option, QuestionData } from '../shared/model/question-data.model';
 import { BaseFormComponent } from '../shared/model/base-form.component';
 declare var MediaRecorder: any;
 @Component({
@@ -35,9 +35,9 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
     const a:any = changes['userAnswer'];
     if(d && d['currentValue']){
       const data = d['currentValue'];
-      if(this.data.type === 'videoBlitz'){
-        this.stopTimer = this.data.options?.reduce((acc:number,curr:any)=>{
-          return acc+curr.sec+5
+      if(this.data.questionType === 'videoBlitz'){
+        this.stopTimer = this.data.options!.reduce((acc:number,curr:Option)=>{
+          return acc+curr.sec!+5
         },0)*1000;
       }
     }
@@ -91,12 +91,12 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
     this.startCountoDownTimer(question);
     setTimeout(()=>{
       this.startBlitz(++question);
-    },this.data.options![question].sec*1000+5000)
+    },this.data.options![question].sec!*1000+5000)
   }
   startCountoDownTimer(question:number){ 
     setTimeout(()=>{ 
       this.moveTop=true;
-      this.blitzTimer.set(this.data.options![question].sec);
+      this.blitzTimer.set(this.data.options![question].sec!);
       this.intervalId = setInterval(()=>{
         if(this.blitzTimer()<1){
           clearInterval(this.intervalId);
@@ -120,8 +120,8 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
       return index;
     }
     const arr = this.data.options!;
-    for(let i = 1, timePassed = timeSpace+arr[0].sec;i<arr!.length;++i){
-      timePassed += timeSpace+arr[0].sec;
+    for(let i = 1, timePassed = timeSpace+arr[0].sec!;i<arr!.length;++i){
+      timePassed += timeSpace+arr[0].sec!;
       if(time<timePassed){
         index = i;
         break;

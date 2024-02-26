@@ -1,90 +1,114 @@
 <div class="editor-component">
-    <form   [formGroup]="form" (ngSubmit)="save()" >
-        <p-card header="New form">
-            <div class="form-control-wraper">
-                <span class="p-float-label">
-                    <input pInputText  formControlName="title" id="title"/>
-                    <label for="title">Title</label>
-                </span>
-            </div>
-            
-            <div class="form-control-wraper">
-                <span class="p-float-label">
-                    <input pInputText formControlName="company" id="company"/>
-                    <label for="company">Company</label>
-                </span>
-            </div>
-            <div class="form-control-wraper">
-                <span class="p-float-label">
-                    <p-dropdown id="status" formControlName="status" [options]="statuses" placeholder="Status" optionLabel="name"></p-dropdown>
-                    <label for="status">Status</label>
-                </span>
-            </div>
-            
-            <div class="form-control-wraper">
-                <p-fileUpload mode="basic" [disabled]="true" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" [auto]="true" chooseLabel="Company Logo"></p-fileUpload>
-            </div>
-        </p-card>
-        <p-card formGroupName="intro" header="Infro">
-            <textarea rows="5" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>
-        </p-card>
-        <div formArrayName="questions">
-        @for(item of questions.controls; track item; let index = $index){
-            <div [formGroupName]="index">
-                <p-panel [toggleable]="true">
-                    <ng-template pTemplate="header">
-                        <div class="flex align-items-center gap-2">
-                            <span class="font-bold">Question</span>
+    @if(currentFormStore.isLoading()){
+        ...loading
+    } @else {
+        <form   [formGroup]="form" (ngSubmit)="save()" >
+            <p-card header="New form">
+                <div class="form-control-wraper">
+                    <span class="p-float-label">
+                        <input pInputText  formControlName="title" id="title"/>
+                        <label for="title">Title</label>
+                    </span>
+                </div>
+                
+                <div class="form-control-wraper">
+                    <span class="p-float-label">
+                        <input pInputText formControlName="company" id="company"/>
+                        <label for="company">Company</label>
+                    </span>
+                </div>
+                <div class="form-control-wraper">
+                    <span class="p-float-label">
+                        <p-dropdown id="status" formControlName="status" [options]="statuses" placeholder="Status" optionLabel="name"></p-dropdown>
+                        <label for="status">Status</label>
+                    </span>
+                </div>
+                
+                <div class="form-control-wraper">
+                    <span class="p-float-label">
+                        <input pInputText  formControlName="logo" id="logo"/>
+                        <label for="logo">logo url</label>
+                    </span>
+                </div>
+            </p-card>
+            <p-card formGroupName="intro" header="Infro">
+                <textarea rows="5" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>
+            </p-card>
+            <div formArrayName="questions">
+            @for(item of questions.controls; track item; let index = $index){
+                <div [formGroupName]="index">
+                    <p-panel [toggleable]="true">
+                        <ng-template pTemplate="header">
+                            <div class="flex align-items-center gap-2">
+                                <span class="font-bold">Question</span>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="icons">
+                            <button *ngIf="index > 0" class="p-panel-header-icon p-link mr-2" (click)="deleteQuestion(index)">
+                                <span class="pi pi-trash"></span>
+                            </button>
+                        </ng-template>
+                        
+                        <div class="form-control-wraper">
+                            <span class="p-float-label">
+                                <p-dropdown id="qType" (onChange)="typeChange(item)" formControlName="questionType" [options]="qType" placeholder="Type" optionLabel="name" ></p-dropdown>
+                                <label for="qType">Type</label>
+                            </span>
                         </div>
-                    </ng-template>
-                    <ng-template pTemplate="icons">
-                        <button *ngIf="index > 0" class="p-panel-header-icon p-link mr-2" (click)="deleteQuestion(index)">
-                            <span class="pi pi-trash"></span>
-                        </button>
-                    </ng-template>
-                    
-                    <div class="form-control-wraper">
-                        <span class="p-float-label">
-                            <p-dropdown id="qType" (onChange)="typeChange(item)" formControlName="questionType" [options]="qType" placeholder="Type" optionLabel="name" ></p-dropdown>
-                            <label for="qType">Type</label>
-                        </span>
-                    </div>
-                    <div class="form-control-wraper">
-                        <span class="p-float-label">
-                            <input [style]="{'width':'100%'}" pInputText formControlName="text" id="text"/>
-                            <label for="text">Question</label>
-                        </span>
-                    </div>
-                    @if(item.get('questionType')?.value?.code && item.get('questionType')?.value?.code !== 'video'){
-                        <div class="form-control-wraper" *ngIf="getOptions(item) && getOptions(item).length > 0">
-                            <span>Options:</span>
+                        <div>
+                        <div class="form-control-wraper">
+                            <span class="p-float-label">
+                                <input [style]="{'width':'100%'}" pInputText formControlName="text" id="text"/>
+                                <label for="text">Question</label>
+                            </span>
                         </div>
-                        <div formArrayName="options">
-                            @for(option of getOptions(item); track option; let index = $index){
-                                <div class="form-control-wraper">
-                                    <span class="p-float-label">
-                                        <input [style]="{'width':'100%'}" pInputText [formControlName]="index"/>
-                                        <label>Option</label>
-                                    </span>
-                                </div>
-                            }
+                        @if(item.get('questionType')?.value?.code && item.get('questionType')?.value?.code !== 'videoBlitz'){
+                            <div class="form-control-wraper">
+                                <span class="p-float-label">
+                                    <input [style]="{'width':'150px'}" pInputText formControlName="sec" id="sec"/>
+                                    <label for="sec">Seconds for answer</label>
+                                </span>
+                            </div>
+                        }
                         </div>
-                        <div class="btn-wrapper">
-                            <p-button (click)="addOption(item)" class = "add-btn" icon="pi pi-plus" label="Add option" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
-                        </div> 
-                    }
-                </p-panel>
+                        @if(item.get('questionType')?.value?.code && item.get('questionType')?.value?.code !== 'video'){
+                            <div class="form-control-wraper" *ngIf="getOptions(item) && getOptions(item).length > 0">
+                                <span>Options:</span>
+                            </div>
+                            <div formArrayName="options">
+                                @for(option of getOptions(item); track option; let index = $index){
+                                    <div class="flex-row-wrapper" [formGroupName]="index">
+                                        <span class="p-float-label" [style]="{'flex':'1'}">
+                                            <input [style]="{'width':'98%'}" pInputText formControlName="text"/>
+                                            <label>Option</label>
+                                        </span>
+                                        @if(item.get('questionType')?.value?.code && item.get('questionType')?.value?.code === 'videoBlitz'){
+                                            <span class="p-float-label">
+                                                <input [style]="{'width':'150px'}" pInputText formControlName="sec"/>
+                                                <label>Seconds for answer</label>
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <div class="btn-wrapper">
+                                <p-button (click)="addOption(item)" class = "add-btn" icon="pi pi-plus" label="Add option" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
+                            </div> 
+                        }
+                    </p-panel>
+                </div>
+            }
             </div>
-        }
-        </div>
-        <div class="btn-wrapper">
-            <p-button (click)="addQuestion()" class = "add-btn" icon="pi pi-plus" label="Add question" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
-        </div>
-        <p-card formGroupName="finish" header="Finish">
-            <textarea rows="2" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>
-        </p-card>
-        <div class="btn-wrapper">
-            <p-button type="submit" class = "add-btn" icon="pi pi-plus" label="Save" [style]="{'float':'right'}"></p-button>
-        </div> 
-        </form>
+            <div class="btn-wrapper">
+                <p-button (click)="addQuestion()" class = "add-btn" icon="pi pi-plus" label="Add question" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
+            </div>
+            <p-card formGroupName="finish" header="Finish">
+                <textarea rows="2" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>
+            </p-card>
+            <div class="btn-wrapper">
+                <p-button type="submit" class = "add-btn" icon="pi pi-plus" label="Save" [style]="{'float':'right'}"></p-button>
+            </div> 
+            </form>
+    }
+    
 </div>

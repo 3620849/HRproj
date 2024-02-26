@@ -11,11 +11,11 @@
                         </div>
                     </ng-template>
                     <div class="min-heigh">
-                        <p class="m-0"  class="question-text" *ngIf="data.question && data.question?.type !=='videoBlitz'" >
+                        <p class="m-0"  class="question-text" *ngIf="data.question && data.question?.questionType !=='videoBlitz'" >
                             {{data.question.text}}
                     </p>
                     </div>
-        <div class="content-container" [ngSwitch]="data.question?.type">
+        <div class="content-container" [ngSwitch]="data.question?.questionType">
             <app-video-blitz [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'videoBlitz'"></app-video-blitz>
             <app-video-answer [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'video'" ></app-video-answer>
             <app-check-box-question [userAnswer]="data.answer" [data]="data.question!" *ngSwitchCase="'checkboxSingle'"></app-check-box-question>

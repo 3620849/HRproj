@@ -1,4 +1,10 @@
+:host{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 .editor-component {
+    flex: 0.5;
     p-card {
         margin: 5px;
     }
@@ -13,5 +19,16 @@
 
     .form-control-wraper {
         margin-top: 20px;
+    }
+    .flex-row-wrapper{
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        
+    }
+}
+@media screen and (max-width: 550px) {
+    .editor-component {
+        flex:1;
     }
 }

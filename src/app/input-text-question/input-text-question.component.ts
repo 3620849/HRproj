@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { QuestionData } from '../shared/model/question-data.model';
+import { Option, QuestionData } from '../shared/model/question-data.model';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup,ReactiveFormsModule} from '@angular/forms';
 import { QuestionType } from '../shared/model/question-type.model';
@@ -53,7 +53,7 @@ export class InputTextQuestionComponent extends BaseFormComponent  implements On
   }
 
   buildForm(){
-    this.data?.options?.forEach((el:string, i:number) => {
+    this.data?.options?.forEach((el:Option, i:number) => {
       const control = this.fb.control('');
       this.optionss.push(control);
     });

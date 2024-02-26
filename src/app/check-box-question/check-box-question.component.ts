@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, WritableSignal, signal } from '@angular/core';
-import { QuestionData } from '../shared/model/question-data.model';
+import { Option, QuestionData } from '../shared/model/question-data.model';
 import { CommonModule } from '@angular/common';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
@@ -33,7 +33,7 @@ export class CheckBoxQuestionComponent extends BaseFormComponent implements OnCh
 
       userAnswersIndexes.forEach((answer:number,index:number)=>{
         if(this.data.options && this.data.options.length>0){
-          userAnswersOp[index] = {text:this.data.options[answer]};
+          userAnswersOp[index] = {text:this.data.options[answer].text};
         }        
       })
      const res: AnswerData = {
@@ -64,11 +64,11 @@ export class CheckBoxQuestionComponent extends BaseFormComponent implements OnCh
       const userAnswerOtions:any = {}
       this.userAnswer.answerOptions.forEach(el=>{if(el.text){userAnswerOtions[el.text]=true}});
       this.data.options?.forEach((el,index) => {
-        if(userAnswerOtions[el]){
-          if(this.data.type==='checkboxSingle'){
+        if(userAnswerOtions[el.text]){
+          if(this.data.questionType==='checkboxSingle'){
             this.optionss.patchValue(['userChoise'+index]);
           }
-          if(this.data.type==='checkboxMultiple'){
+          if(this.data.questionType==='checkboxMultiple'){
             this.optionss.at(index).patchValue(['userChoise'+index])
           }
         }
@@ -78,12 +78,12 @@ export class CheckBoxQuestionComponent extends BaseFormComponent implements OnCh
 
   buildForm(){
     const single:QuestionType = 'checkboxSingle'; 
-    if (this.data.type === single) {
+    if (this.data.questionType === single) {
       this.optionss.push(this.fb.control(''+0));
     } else {
-      this.data?.options?.forEach((el:string, i:number) => {
+      this.data?.options?.forEach((el:Option, i:number) => {
         const control = this.fb.control(''+i);
-        control.setValue(el);
+        control.setValue(el.text);
         this.optionss.push(control);
       })
     }

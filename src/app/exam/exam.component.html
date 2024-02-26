@@ -1,8 +1,8 @@
 <div class="exam-component">
     @if(!data()){
         loading...
-    } @else if(data()?.type === 'info'){
-        <div class="exam-content" *ngIf="data()?.type === 'info'">
+    } @else if(data()?.questionType === 'info'){
+        <div class="exam-content" *ngIf="data()?.questionType === 'info'">
             <app-intro [data]="data()!" (submitEvent)="loadQuestion()">
             </app-intro>
         </div>   
@@ -15,5 +15,4 @@
             </app-question>
         </div>
     }
-     
 </div>

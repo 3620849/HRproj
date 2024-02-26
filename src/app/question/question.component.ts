@@ -49,7 +49,7 @@ export class QuestionComponent implements OnInit, OnChanges {
     if(d && d['currentValue']){
       let time = this.data.sec;
        
-      if(this.data.type === 'videoBlitz'){
+      if(this.data.questionType === 'videoBlitz'){
         time = this.data.options?.reduce((acc:number,curr:any)=>{
           return acc+curr.sec+5
         },0)

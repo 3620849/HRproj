@@ -4,13 +4,18 @@ export interface QuestionData {
     id?:string;
     sec?:number;
     startOnShow?:boolean;
-    type: QuestionType;
+    questionType: QuestionType;
     text?: string,
-    options?: any[],
+    options?: Option[],
     total?:number;
     oder?:number;
     noControl?:boolean;
     title?:string;
     subheader?:string;
     img?:string;
+}
+export interface Option {
+    id?:string,
+    text:string,
+    sec?:number
 }

@@ -28,6 +28,7 @@ export class FormsListComponent implements OnInit {
   }
   ngOnInit(): void {
     this.formsListStore.loadForms(0,10);
+    
   }
 
   public getSeverity(status: string): any {
