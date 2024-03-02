@@ -3,7 +3,7 @@
         ...loading
     } @else {
         <form   [formGroup]="form" (ngSubmit)="save()" >
-            <p-card header="New form">
+            <p-card [header]="formHeader">
                 <div class="form-control-wraper">
                     <span class="p-float-label">
                         <input pInputText  formControlName="title" id="title"/>
@@ -106,7 +106,7 @@
                 <textarea rows="2" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>
             </p-card>
             <div class="btn-wrapper">
-                <p-button type="submit" class = "add-btn" icon="pi pi-plus" label="Save" [style]="{'float':'right'}"></p-button>
+                <p-button type="submit" class = "add-btn" icon="pi pi-plus" [label]="saveBtnTxt" [style]="{'float':'right'}"></p-button>
             </div> 
             </form>
     }

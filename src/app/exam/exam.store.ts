@@ -2,6 +2,7 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { inject } from '@angular/core';
 import { Form } from '../admin/model/form.model';
 import { ExamService } from './exam.service';
+import { User } from '../shared/model/user.model';
 
 type ExamState = {
     form: Form|null;
@@ -30,10 +31,22 @@ type ExamState = {
             patchState(store, { form:null, isLoading: false , error:error.message});
           }})
         },
-        getQuestion(){
+        getQuestion(link:string){
             if(!store.isLoading() && store.form()){
-                patchState(store, { currentQuestionIndex: store.currentQuestionIndex()+1});
+                const userStr:string = localStorage.getItem('user')!;
+                const user:User = JSON.parse(userStr);
+                const exam = user.exam!.find(e=>e.id===link);
+                const currentQuestionIndex = store.currentQuestionIndex()+1;
+                exam!.lastQuestion = currentQuestionIndex;
+                localStorage.setItem('user',JSON.stringify(user));                
+                patchState(store, { currentQuestionIndex});
             }            
+        },
+        setLastQuestion(index:number){
+            patchState(store, { currentQuestionIndex: index});
+        },
+        setLoading(isLoading:boolean){
+            patchState(store, {isLoading});
         }
 
       }))

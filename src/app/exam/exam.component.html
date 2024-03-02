@@ -1,5 +1,5 @@
 <div class="exam-component">
-    @if(!data()){
+    @if(!data() || examStore.isLoading()){
         loading...
     } @else if(data()?.questionType === 'info'){
         <div class="exam-content" *ngIf="data()?.questionType === 'info'">

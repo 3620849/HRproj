@@ -61,7 +61,8 @@ export class QuestionComponent implements OnInit, OnChanges {
     }
   }
   userAnswer:AnswerData|null;
-  setUserChoise($event:any){
+  setUserChoise($event:AnswerData){
+    $event.questionType = this.data.questionType;
     this.userAnswer = $event;
   }
   submit(){

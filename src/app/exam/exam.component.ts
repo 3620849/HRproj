@@ -1,6 +1,5 @@
 import { Component, Signal, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LoginService } from '../login/login.service';
 import { IntroComponent } from '../intro/intro.component';
 import { QuestionComponent } from "../question/question.component";
 import { CommonModule } from '@angular/common';
@@ -9,7 +8,9 @@ import { TopMenuBarService } from '../top-menu-bar/top-menu-bar.service';
 import { QuestionData } from '../shared/model/question-data.model';
 import { ExamStore } from './exam.store';
 import { getState } from '@ngrx/signals';
-
+import { User, UserExam } from '../shared/model/user.model';
+import { v4 as uuidv4 } from 'uuid';
+import { AnswerData } from '../shared/model/answer-data.model';
 @Component({
     selector: 'app-exam',
     standalone: true,
@@ -22,7 +23,6 @@ export class ExamComponent {
   readonly examStore = inject(ExamStore);
   data:WritableSignal<QuestionData|null>= signal(null);
   constructor(private route: ActivatedRoute,
-     private loginSrv: LoginService,
      private examSrv: ExamService,
      private barService:TopMenuBarService) {
       effect(() => {
@@ -37,6 +37,7 @@ export class ExamComponent {
 
   ngOnInit(): void {
     this.link = ''+this.route.snapshot.paramMap.get('id');
+    this.loadLastUserActions();
     this.barService.setTimer(-1);
     if(this.link){
       this.examStore.loadForm(this.link);
@@ -44,10 +45,35 @@ export class ExamComponent {
   }
 
   loadQuestion(){
-    this.examStore.getQuestion();    
+    this.examStore.getQuestion(this.link);    
   }
-  submitAnswer($event?:any){
-    this.examSrv.sendAnswer($event)
-    this.loadQuestion()
+  submitAnswer($event?:AnswerData){
+    $event!.examId = this.link;
+    this.examStore.setLoading(true);
+    this.examSrv.sendAnswer($event!).subscribe(()=>{
+      this.examStore.setLoading(false);
+      this.loadQuestion()
+    })
+  }
+  loadLastUserActions() {
+    const userStr:string|null = localStorage.getItem('user');
+    if(!userStr){
+      const user:User = {id:uuidv4(), role:'testee',exam:[{id:this.link,lastQuestion:0}]}
+      localStorage.setItem('user',JSON.stringify(user));
+    }else{
+      const user:User = JSON.parse(userStr);
+      if(user.exam){
+        const exam = user.exam.find(exam=>exam.id===this.link);
+        if(exam){
+          this.examStore.setLastQuestion(exam.lastQuestion);
+        }else{
+          user.exam.push({id:this.link,lastQuestion:0})
+        }
+      }else{
+        user.exam = [{id:this.link,lastQuestion:0}];
+        localStorage.setItem('user',JSON.stringify(user));
+      }
+    }
+
   }
 }

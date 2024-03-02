@@ -14,6 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { FormsStore } from './forms.store';
+import { AdminService } from '../admin.service';
 
 @Component({
   selector: 'app-forms-list',
@@ -24,7 +25,10 @@ import { FormsStore } from './forms.store';
 })
 export class FormsListComponent implements OnInit {
   readonly formsListStore = inject(FormsStore);
-  constructor(private messageService: MessageService, private router: Router) {
+  constructor(
+    private adminService: AdminService,
+    private messageService: MessageService,
+     private router: Router) {
   }
   ngOnInit(): void {
     this.formsListStore.loadForms(0,10);
@@ -50,5 +54,10 @@ export class FormsListComponent implements OnInit {
   }
   editExam(id: string) {
     this.router.navigateByUrl('admin/editor/' + id);
+  }
+  deleteExam(id: string) {
+    this.adminService.deleteForm(id).subscribe(()=>{
+      this.formsListStore.loadForms(0,10);
+    })    
   }
 }

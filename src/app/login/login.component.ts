@@ -19,8 +19,8 @@ import { getState } from '@ngrx/signals';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  pass:string;
-  mail:string;
+  pass:string = "123";
+  mail:string = "a@gmail.com";
   readonly store = inject(UserStore);
 
   constructor(private router: Router,private route: ActivatedRoute,private messageService: MessageService){

@@ -5,7 +5,7 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PanelModule } from 'primeng/panel';
 import { AdminService } from '../admin.service';
@@ -14,10 +14,12 @@ import { CurrentFormStore } from './currentForm.store';
 import { getState } from '@ngrx/signals';
 import { QuestionData } from '../../shared/model/question-data.model';
 import { Option } from '../../shared/model/question-data.model';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-form-editor',
   standalone: true,
-  imports: [PanelModule,InputTextareaModule ,ReactiveFormsModule,DropdownModule,FileUploadModule,FormsModule,CommonModule,InputTextModule,CardModule],
+  imports: [ToastModule,PanelModule,InputTextareaModule ,ReactiveFormsModule,DropdownModule,FileUploadModule,FormsModule,CommonModule,InputTextModule,CardModule],
   templateUrl: './form-editor.component.html',
   styleUrl: './form-editor.component.scss'
 })
@@ -50,10 +52,14 @@ export class FormEditorComponent {
     { name: 'Checkbox(multiple choise)', code: 'checkboxMultiple' },
   ]; 
   id:string|null;
-  constructor(private route:ActivatedRoute,private fb: FormBuilder,private adminSrv:AdminService){
+  formHeader:string = 'New Form'
+  saveBtnTxt:string = 'Save'
+  constructor(private router: Router,private msgSrv:MessageService,private route:ActivatedRoute,private fb: FormBuilder,private adminSrv:AdminService){
     this.id = this.route.snapshot.paramMap.get('id');
     let data:WritableSignal<Form|null> = signal(null);
     if(this.id){
+      this.formHeader = 'Edit Form';
+      this.saveBtnTxt = 'Update';
       effect(()=>{
         const state = getState(this.currentFormStore);
         if(state.form){
@@ -172,7 +178,6 @@ export class FormEditorComponent {
     }
   }
   save(){
-    
     if(this.form.value.questions){
       const formDto = JSON.parse(JSON.stringify(this.form.value));
       formDto.status  = formDto.status.code;
@@ -186,10 +191,18 @@ export class FormEditorComponent {
       if(this.id){
         formDto.id = this.id;
       }
-      console.log(formDto); 
-      this.adminSrv.saveForm(formDto).subscribe(res=>{
-          console.log(res);          
-      });
+      if(this.id){
+        this.adminSrv.updateForm(formDto).subscribe(res=>{
+          console.log(res); 
+          this.msgSrv.add({ severity: 'success', summary: 'Success', detail:'Form updated'});       
+          this.router.navigateByUrl('/admin');
+        });
+      } else {
+        this.adminSrv.saveForm(formDto).subscribe(res=>{
+          this.msgSrv.add({ severity: 'success', summary: 'Success', detail:'Form saved'});            
+          this.router.navigateByUrl('/admin');
+        });
+      }
     }   
   }
 

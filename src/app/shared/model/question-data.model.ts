@@ -1,6 +1,7 @@
 import { QuestionType } from "./question-type.model";
 
 export interface QuestionData {
+    userId?:string;
     id?:string;
     sec?:number;
     startOnShow?:boolean;

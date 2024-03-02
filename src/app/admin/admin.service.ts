@@ -87,4 +87,10 @@ export class AdminService {
     saveForm(form:Form):Observable<any>{
       return this.http.post(environment.api+"/form",form);
     }
+    updateForm(form:Form):Observable<any>{
+      return this.http.put(environment.api+"/form",form);
+    }
+    deleteForm(id: string) {
+      return this.http.delete(environment.api+"/form/"+id)
+    }
 }
