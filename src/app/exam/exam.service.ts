@@ -20,8 +20,9 @@ export class ExamService {
     data.userId = user.id;
     if(data.questionType === 'video' ||data.questionType === 'videoBlitz'){
       const option = data.answerOptions!.find(option => option.video);
-      const blob = option!.video
-      const file = new File([blob], "myvideo.webm",{type:"video/webm"});
+      const blob = option!.video.blob
+      const videoType = option!.video.type;
+      const file = new File([blob], "myvideo."+videoType,{type:"video/"+videoType});
       const formData = new FormData();
       formData.append('file', file, file.name);
       let headers = new HttpHeaders();

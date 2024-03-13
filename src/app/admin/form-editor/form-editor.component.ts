@@ -25,6 +25,7 @@ import { MessageService } from 'primeng/api';
 })
 export class FormEditorComponent {
   readonly currentFormStore = inject(CurrentFormStore);
+  reviews:number|undefined = 0;
   form:FormGroup;
   questions:FormArray = this.fb.array([
     new FormGroup({
@@ -54,7 +55,7 @@ export class FormEditorComponent {
   id:string|null;
   formHeader:string = 'New Form'
   saveBtnTxt:string = 'Save'
-  constructor(private router: Router,private msgSrv:MessageService,private route:ActivatedRoute,private fb: FormBuilder,private adminSrv:AdminService){
+  constructor(private router: Router,private msgSrv:MessageService,private route:ActivatedRoute,private fb: FormBuilder,private adminSrv:AdminService,private messageService: MessageService){
     this.id = this.route.snapshot.paramMap.get('id');
     let data:WritableSignal<Form|null> = signal(null);
     if(this.id){
@@ -65,6 +66,7 @@ export class FormEditorComponent {
         if(state.form){
           this.form = new FormGroup({});
           this.buildFormByData(state.form);
+          this.reviews = state.form.reviews;
         }
       })
       this.currentFormStore.loadForm(this.id);
@@ -99,6 +101,9 @@ export class FormEditorComponent {
     data.questions?.forEach((q:QuestionData)=>{
       this.addQuestion(q);
     })
+    if(data?.reviews! > 0){
+      this.questions.disable();
+    }
   }
   findStatus(text:string){
     return this.statuses.find(el=> el.code === text);
@@ -178,10 +183,10 @@ export class FormEditorComponent {
     }
   }
   save(){
-    if(this.form.value.questions){
+    if(this.form.value){
       const formDto = JSON.parse(JSON.stringify(this.form.value));
       formDto.status  = formDto.status.code;
-      formDto.questions.map((question:any) => {
+      formDto.questions?.map((question:any) => {
         question.questionType = question.questionType.code;
         if(question.questionType === "videoBlitz"){
           delete question.sec;
@@ -193,15 +198,18 @@ export class FormEditorComponent {
       }
       if(this.id){
         this.adminSrv.updateForm(formDto).subscribe(res=>{
-          console.log(res); 
           this.msgSrv.add({ severity: 'success', summary: 'Success', detail:'Form updated'});       
           this.router.navigateByUrl('/admin');
         });
       } else {
-        this.adminSrv.saveForm(formDto).subscribe(res=>{
-          this.msgSrv.add({ severity: 'success', summary: 'Success', detail:'Form saved'});            
-          this.router.navigateByUrl('/admin');
-        });
+        if(this.form.value.questions){
+          this.adminSrv.saveForm(formDto).subscribe(res=>{
+            this.msgSrv.add({ severity: 'success', summary: 'Success', detail:'Form saved'});            
+            this.router.navigateByUrl('/admin');
+          });
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail:'please add questions'});
+        }        
       }
     }   
   }

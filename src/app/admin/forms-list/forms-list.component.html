@@ -31,13 +31,13 @@
                 <td>{{product.company}}</td>
                 <td><p-avatar icon="pi pi-inbox" pBadge (click)="gotToAnsers(product.id)" [value]="product.reviews" severity="success" styleClass="mr-2" size="large"></p-avatar></td>
                 <td><p-tag [value]="product.status" [severity]="getSeverity(product.status)"></p-tag></td>
-                <td><button pButton pRipple type="button" icon="pi pi-pencil" (click)="editExam(product.id)" class="p-button-rounded p-button-text"></button></td>
+                <td><button pButton pRipple type="button" [icon]="product.reviews==0?'pi pi-pencil':'pi pi-eye'" (click)="editExam(product.id)" class="p-button-rounded p-button-text"></button></td>
                 <td><button pButton pRipple type="button" icon="pi pi-trash" (click)="deleteExam(product.id)" class="p-button-rounded p-button-text"></button></td>
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
             <div class="flex align-items-center justify-content-between">
-                In total there are {{formsListStore.forms()!.list ? formsListStore.forms()!.total : 0 }} products.
+                In total there are {{formsListStore.forms()!.list ? formsListStore.forms()!.total : 0 }} forms.
             </div>
         </ng-template>
     </p-table>

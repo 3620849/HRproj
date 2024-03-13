@@ -24,6 +24,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   audioStream:MediaStream;
   autoplayVal:boolean = true;
   userAnswerSrc:boolean;
+  mediaType:string;
   @Output()
   onStartRecord:EventEmitter<any> = new EventEmitter();
   @Output()
@@ -73,8 +74,17 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     };
     try {
         this.mediaRecorder = new MediaRecorder(this.stream, options);
+        this.mediaType = 'webm';
     } catch (err) {
-        console.log(err);
+      try {
+        // Fallback for iOS
+        this.mediaRecorder = new MediaRecorder(this.stream, { mimeType: 'video/mp4' });
+        this.mediaType = 'mp4';
+      }catch (err2) {
+        // If fallback doesn't work either. Log / process errors.
+        console.error({err});
+        console.error({err2})
+      }
     }
     this.mediaRecorder.start();
     this.isRecording = !this.isRecording;
@@ -104,9 +114,9 @@ registerVideoRecordingEvent() {
   try {
       this.mediaRecorder.onstop = (event: Event) => {
           const videoBuffer = new Blob(this.recordedChunks, {
-              type: 'video/webm'
+              type: 'video/'+this.mediaType
           });
-          this.onRecordReady.emit(videoBuffer);
+          this.onRecordReady.emit({blob:videoBuffer,type:this.mediaType});
           this.downloadVideoUrl = window.URL.createObjectURL(videoBuffer);
           this.video.nativeElement.src = this.downloadVideoUrl;
           this.video.nativeElement.srcObject = null;          

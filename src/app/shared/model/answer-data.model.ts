@@ -1,4 +1,4 @@
-import { QuestionData } from "./question-data.model";
+import { QuestionData, Option } from "./question-data.model";
 import { QuestionType } from "./question-type.model";
 
 export interface AnswerData {
@@ -8,7 +8,7 @@ export interface AnswerData {
     text?:string;
     questionType?: QuestionType;
     answerOptions: AnswerOptions[];
-    questions?:any;
+    questions?:Option[]; //questions for videoblitz
 }
 export interface AnswerOptions {
     video?:any;

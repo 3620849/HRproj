@@ -47,13 +47,28 @@ export class ExamComponent {
   loadQuestion(){
     this.examStore.getQuestion(this.link);    
   }
-  submitAnswer($event?:AnswerData){
-    $event!.examId = this.link;
+  submitAnswer($event?:AnswerData){    
+    const ans = this.formatAnswer($event!);
     this.examStore.setLoading(true);
-    this.examSrv.sendAnswer($event!).subscribe(()=>{
+    this.examSrv.sendAnswer(ans).subscribe(()=>{
       this.examStore.setLoading(false);
       this.loadQuestion()
     })
+  }
+  formatAnswer($event: AnswerData) {
+    //TODO clone and copy blob
+   // const answer:AnswerData =  JSON.parse(JSON.stringify($event));
+   $event.examId = this.examStore.form()!.id;   
+    $event.questionType = this.data()!.questionType;
+    if($event.answerOptions){
+      $event.answerOptions.map((op:any)=>{
+        if(op.label){
+          op.label = op.label.text;
+        }
+        return op;
+      })
+    }
+    return $event;
   }
   loadLastUserActions() {
     const userStr:string|null = localStorage.getItem('user');
@@ -68,6 +83,7 @@ export class ExamComponent {
           this.examStore.setLastQuestion(exam.lastQuestion);
         }else{
           user.exam.push({id:this.link,lastQuestion:0})
+          localStorage.setItem('user',JSON.stringify(user));
         }
       }else{
         user.exam = [{id:this.link,lastQuestion:0}];

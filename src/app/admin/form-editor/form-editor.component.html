@@ -44,7 +44,7 @@
                             </div>
                         </ng-template>
                         <ng-template pTemplate="icons">
-                            <button *ngIf="index > 0" class="p-panel-header-icon p-link mr-2" (click)="deleteQuestion(index)">
+                            <button *ngIf="index > 0" class="p-panel-header-icon p-link mr-2" [disabled]="!!reviews" (click)="deleteQuestion(index)">
                                 <span class="pi pi-trash"></span>
                             </button>
                         </ng-template>
@@ -92,7 +92,7 @@
                                 }
                             </div>
                             <div class="btn-wrapper">
-                                <p-button (click)="addOption(item)" class = "add-btn" icon="pi pi-plus" label="Add option" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
+                                <p-button [disabled]="!!reviews" (click)="addOption(item)" class = "add-btn" icon="pi pi-plus" label="Add option" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
                             </div> 
                         }
                     </p-panel>
@@ -100,7 +100,7 @@
             }
             </div>
             <div class="btn-wrapper">
-                <p-button (click)="addQuestion()" class = "add-btn" icon="pi pi-plus" label="Add question" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
+                <p-button [disabled]="!!reviews" (click)="addQuestion()" class = "add-btn" icon="pi pi-plus" label="Add question" [style]="{'width':'calc(100% - 20px)','margin': '5px'}"></p-button>
             </div>
             <p-card formGroupName="finish" header="Finish">
                 <textarea rows="2" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>

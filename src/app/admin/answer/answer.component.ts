@@ -1,4 +1,4 @@
-import { CommonModule, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+import { CommonModule, NgSwitch, NgSwitchCase, NgSwitchDefault,Location } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { IntroComponent } from '../../intro/intro.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,8 +10,6 @@ import { CheckBoxQuestionComponent } from '../../check-box-question/check-box-qu
 import { InputTextQuestionComponent } from '../../input-text-question/input-text-question.component';
 import { VideoBlitzComponent } from '../../video-blitz/video-blitz.component';
 import { VideoQuestionComponent } from '../../video-question/video-question.component';
-import { QuestionData } from '../../shared/model/question-data.model';
-import { AnswerData } from '../../shared/model/answer-data.model';
 import { AnswerRewievStore } from './answer.store';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -37,12 +35,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AnswerComponent {
   readonly answerStore = inject(AnswerRewievStore);
-  constructor( private router: Router, private route:ActivatedRoute) { }
+  constructor( private router: Router, private route:ActivatedRoute,private location: Location) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if(id){
-      this.answerStore.loadAnswersList(id);
+    const examId = this.route.snapshot.paramMap.get('id');
+     
+    const state:any = this.location.getState();
+    const userId = state.userId;
+    //TODO get answer by userid and examid
+    if(examId && userId){
+      this.answerStore.loadAnswersList(examId, userId);
     }
   }
 }

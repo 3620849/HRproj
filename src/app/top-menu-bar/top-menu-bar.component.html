@@ -8,14 +8,14 @@
             <button *ngIf="user()?.role === 'admin'" [routerLink]="'/admin'" class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"><i class="pi pi-user text-2xl"></i></button>
             <button (click)="login()" class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"><i class="pi pi-sign-in text-2xl"></i></button>
         </div>
-        <div class="flex flex-wrap align-items-center gap-3" *ngIf = "barType == 'exam'">
+        <div class="flex flex-wrap align-items-center gap-3" *ngIf = "barType == 'exam'  && timer() !== '0:00' ">
             <span class="font-bold text-bluegray-50">{{timer()}}</span>
         </div>
     </ng-template>
     <ng-template pTemplate="end">
-        <div class="flex align-items-center gap-2" *ngIf="user()">
+        <!-- <div class="flex align-items-center gap-2" *ngIf="user()">
             <p-avatar [image]="user().photo" shape="circle" />
             <span class="font-bold text-bluegray-50">{{user().name}}</span>
-        </div>
+        </div> -->
     </ng-template>
   </p-toolbar>

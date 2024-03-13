@@ -17,12 +17,13 @@ import { AnswerListStore } from './answers-list.store';
 })
 export class AnswersListComponent implements OnInit {
   readonly answersStore = inject(AnswerListStore);
+  examId:string;
   constructor( private router: Router, private route:ActivatedRoute) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    if(id){
-      this.answersStore.loadAnswersList(id,0,10);
+   this.examId = this.route.snapshot.paramMap.get('id')!;
+    if(this.examId){
+      this.answersStore.loadAnswersList(this.examId,0,10);
     }
   }
 
@@ -36,7 +37,7 @@ export class AnswersListComponent implements OnInit {
         return 'danger';
     }
   }
-  goTo(id:string){
-    this.router.navigateByUrl('admin/answer/'+id);
+  goTo(userId:string){
+    this.router.navigateByUrl('admin/answer/'+this.examId,{state:{userId}});
   }
 }

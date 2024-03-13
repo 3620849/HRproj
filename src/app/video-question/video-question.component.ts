@@ -3,7 +3,6 @@ import { Component, ElementRef, EventEmitter, Inject, Input, NgZone, OnChanges, 
 import { ButtonModule } from 'primeng/button';
 import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
-import { QuestionData } from '../shared/model/question-data.model';
 import { BaseFormComponent } from '../shared/model/base-form.component';
 declare var MediaRecorder: any;
 @Component({
@@ -23,7 +22,7 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
   }
   override setAnswers(): void {  
     setTimeout(()=>{ 
-      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].video);   
+      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].videoLink);   
     }); 
   }
 
@@ -40,8 +39,7 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
       if(!this.userAnswer){
         this.videoInputComponent.onStart();
       }
-    }) 
-   
+    })
   }
 
   startRecord(){

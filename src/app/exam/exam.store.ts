@@ -25,7 +25,7 @@ type ExamState = {
         loadForm(link:string){
           patchState(store, { isLoading: true});
           examSrv.loadForm(link).subscribe({next:(formResp:Form)=>{
-            converInfoAndFinisToQuestion(formResp);
+            converInfoAndFinishToQuestion(formResp);
             patchState(store, { form:formResp, isLoading: false });
           },error:error=>{
             patchState(store, { form:null, isLoading: false , error:error.message});
@@ -51,11 +51,11 @@ type ExamState = {
 
       }))
   );
-  const converInfoAndFinisToQuestion = (formResp:Form)=>{
+  const converInfoAndFinishToQuestion = (formResp:Form)=>{
     formResp.questions!.unshift({
         sec:-1,questionType:'info',img:'https://primefaces.org/cdn/primeng/images/usercard.png',title:"Welcome", subheader:'at online assesment', text:formResp.intro.text
     })
     formResp.questions!.push({
-        sec:-1,noControl:true,questionType:'info',img:'https://t3.ftcdn.net/jpg/02/91/52/22/360_F_291522205_XkrmS421FjSGTMRdTrqFZPxDY19VxpmL.jpg',title:"Finish", subheader:'well done', text:formResp.intro.text
+        sec:-1,noControl:true,questionType:'info',img:'https://t3.ftcdn.net/jpg/02/91/52/22/360_F_291522205_XkrmS421FjSGTMRdTrqFZPxDY19VxpmL.jpg',title:"Finish", subheader:'well done', text:formResp.finish.text
     })
   }

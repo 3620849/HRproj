@@ -48,7 +48,7 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
   }
   override setAnswers(): void {  
     setTimeout(()=>{ 
-      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].video);  
+      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].videoLink);  
       this.moveTop = true; 
     }); 
   }

@@ -11,6 +11,7 @@ export class Form {
     company: string;
     status: string;
     intro: Option;
+    finish: Option;
     questions?: QuestionData[];
 }
 export class FormResponse{
@@ -18,15 +19,17 @@ export class FormResponse{
     total:number;
     page:number;
 }
-export class Answer {
+export class AnsweredUser {
       id: string;
       name: string;
       date: number;
       status: string;
       review: number;
+      userId: string;
+      examId: string;
 }
-export class AnswesListResponse{
-    list:Answer[];
+export class AnsweredUserResponse{
+    list:AnsweredUser[];
     total:number;
     page:number;
 }
