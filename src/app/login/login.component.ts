@@ -5,7 +5,7 @@ import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { UserStore } from '../shared/store/user.store';
@@ -13,7 +13,7 @@ import { getState } from '@ngrx/signals';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ToastModule,ButtonModule, FormsModule,CheckboxModule,InputTextModule,PasswordModule,DividerModule],
+  imports: [RouterModule,ToastModule,ButtonModule, FormsModule,CheckboxModule,InputTextModule,PasswordModule,DividerModule],
   
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

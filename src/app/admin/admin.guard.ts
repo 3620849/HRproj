@@ -13,6 +13,6 @@ export const AdminGuard: CanActivateFn = (
     | boolean 
     | UrlTree=> {
     let st =  getState(inject(UserStore));
-
-    return !!st.user &&  st.user.role === 'admin' ? true : inject(Router).navigateByUrl('/login');
+    const user = !!st.user;
+    return  user ? true : inject(Router).navigateByUrl('/login');
   };

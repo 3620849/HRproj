@@ -8,11 +8,13 @@ import { FormsListComponent } from './admin/forms-list/forms-list.component';
 import { FormEditorComponent } from './admin/form-editor/form-editor.component';
 import { AnswerComponent } from './admin/answer/answer.component';
 import { AnswersListComponent } from './admin/answers-list/answers-list.component';
+import { RegisterComponent } from './register/register.component';
 
 export const routes: Routes = [
     {path:'', pathMatch:'full', redirectTo:'home'},
     {path:'home', component: HomeComponent},
     {path:'login', component: LoginComponent},
+    {path:'register', component: RegisterComponent},
     {path:'admin',component:AdminComponent, canActivate:[AdminGuard], canActivateChild:[AdminGuard],
         children:[
             {path:'',component:FormsListComponent},
