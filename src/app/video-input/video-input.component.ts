@@ -70,7 +70,9 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.hideControls = true;
     this.recordedChunks = [];
     let options: any = {
-        mimeType: 'video/webm'
+        mimeType: 'video/webm',
+        audioBitsPerSecond: 128000,
+        videoBitsPerSecond: 2500000
     };
     try {
         this.mediaRecorder = new MediaRecorder(this.stream, options);
