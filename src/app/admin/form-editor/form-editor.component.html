@@ -1,5 +1,5 @@
 <div class="editor-component">
-    @if(currentFormStore.isLoading()){
+    @if(currentFormStore.isLoading() || !form){
         ...loading
     } @else {
         <form   [formGroup]="form" (ngSubmit)="save()" >
@@ -31,6 +31,66 @@
                     </span>
                 </div>
             </p-card>
+            <p-panel formGroupName="systemGroup" [toggleable]="true" [collapsed]="true">
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <span class="font-bold">System group</span>
+                    </div>
+                </ng-template> 
+                <div class="form-control-wraper">
+                    <div  class="system-wraper">
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="startTitle" formControlName="startTitle"/>
+                                <label for="startTitle">Start Title</label>
+                            </span>
+                        </span>
+                        
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="startSubTitle" formControlName="startSubTitle"/>
+                                <label for="startSubTitle">Start Sub Title</label>
+                            </span>
+                        </span>
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="startBtn" formControlName="startBtn"/>
+                                <label for="startBtn">Start btn</label>
+                            </span>
+                        </span>
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="questionHeader" formControlName="questionHeader"/>
+                                <label for="questionHeader">Question</label>
+                            </span>
+                        </span>
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="questionHeader" formControlName="questionHeader"/>
+                                <label for="questionHeader">sec</label>
+                            </span>
+                        </span> 
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="submit" formControlName="submit"/>
+                                <label for="submit">Submit</label>
+                            </span>
+                        </span>
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="finishTitle" formControlName="finishTitle"/>
+                                <label for="finishTitle">Finish title</label>
+                            </span>
+                        </span>
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="finishSubTitle" formControlName="finishSubTitle"/>
+                                <label for="finishSubTitle">Finish subtitle</label>
+                            </span>
+                        </span>
+                    </div> 
+                </div> 
+            </p-panel>
             <p-card formGroupName="intro" header="Infro">
                 <textarea rows="5" [style]="{'width':'100%'}" pInputTextarea formControlName="text"></textarea>
             </p-card>

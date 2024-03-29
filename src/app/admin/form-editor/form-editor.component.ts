@@ -81,6 +81,15 @@ export class FormEditorComponent {
   buildFormByData(data:Form){
     const statusVal:any = this.findStatus(data.status);
     const group = {
+      systemGroup: new FormGroup({
+        startTitle: this.fb.control(data.systemGroup.startTitle,Validators.required),
+        startSubTitle: this.fb.control(data.systemGroup.startSubTitle,Validators.required),
+        startBtn: this.fb.control(data.systemGroup.startBtn,Validators.required),
+        questionHeader: this.fb.control(data.systemGroup.questionHeader,Validators.required),
+        submit: this.fb.control(data.systemGroup.submit,Validators.required),
+        finishTitle: this.fb.control(data.systemGroup.finishTitle,Validators.required),
+        finishSubTitle: this.fb.control(data.systemGroup.finishSubTitle,Validators.required),
+      }),
       title: this.fb.control(data.title,Validators.required),
       company:this.fb.control(data.company,Validators.required),
       status: this.fb.control(statusVal,Validators.required),
@@ -113,6 +122,15 @@ export class FormEditorComponent {
   }
   buildForm(data:any){
     this.form = new FormGroup({
+      systemGroup: new FormGroup({
+        startTitle: this.fb.control("Welcome",Validators.required),
+        startSubTitle: this.fb.control("at online assesment",Validators.required),
+        startBtn: this.fb.control("Start",Validators.required),
+        questionHeader: this.fb.control("Question",Validators.required),
+        submit: this.fb.control("Submit",Validators.required),
+        finishTitle: this.fb.control("Finish",Validators.required),
+        finishSubTitle: this.fb.control("well done",Validators.required),
+      }),
       title: this.fb.control('',Validators.required),
       company:this.fb.control('',Validators.required),
       status: this.fb.control('',Validators.required),

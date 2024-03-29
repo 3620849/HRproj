@@ -1,3 +1,4 @@
+import { SystemGroup } from "../../admin/model/form.model";
 import { QuestionType } from "./question-type.model";
 
 export interface QuestionData {
@@ -14,6 +15,7 @@ export interface QuestionData {
     title?:string;
     subheader?:string;
     img?:string;
+    systemGroup: SystemGroup;
 }
 export interface Option {
     id?:string,

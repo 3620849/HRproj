@@ -2,7 +2,7 @@
     <p-panel class="h-full" >
             <ng-template pTemplate="header">
                 <div class="flex align-items-center gap-2 max-wid">
-                    <span class="font-bold">Question</span>
+                    <span class="font-bold">{{data.systemGroup.questionHeader}}</span>
                     <i *ngIf="data?.sec && data.sec!>-1" class="pi pi-clock mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="questionData?.sec+'sec'"></i>
                 </div>
             </ng-template>
@@ -21,7 +21,7 @@
             </div>
             <ng-template pTemplate="footer" > 
                 <div class="flex flex-wrap align-items-center justify-content-between gap-3 h-3rem ">
-                    <p-button label="Submit"  (click)="submit()" [style]="{float:'right'}"></p-button>    
+                    <p-button [label]="data.systemGroup.submit"  (click)="submit()" [style]="{float:'right'}"></p-button>    
                 </div>
             </ng-template>
     </p-panel>

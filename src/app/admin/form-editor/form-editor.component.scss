@@ -19,6 +19,14 @@
 
     .form-control-wraper {
         margin-top: 20px;
+        .system-wraper{
+            display: flex;
+            flex-wrap: wrap;
+            .translation{
+                margin: 5px;
+                margin-top: 18px;
+            }
+        }
     }
     .flex-row-wrapper{
         margin-top: 20px;

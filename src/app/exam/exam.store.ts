@@ -3,6 +3,7 @@ import { inject } from '@angular/core';
 import { Form } from '../admin/model/form.model';
 import { ExamService } from './exam.service';
 import { User } from '../shared/model/user.model';
+import { QuestionData } from '../shared/model/question-data.model';
 
 type ExamState = {
     form: Form|null;
@@ -52,10 +53,27 @@ type ExamState = {
       }))
   );
   const converInfoAndFinishToQuestion = (formResp:Form)=>{
+    formResp.questions = formResp.questions!.map((q: QuestionData) => {
+      q.systemGroup = formResp.systemGroup;
+      return q;
+    });
     formResp.questions!.unshift({
-        sec:-1,questionType:'info',img:'https://primefaces.org/cdn/primeng/images/usercard.png',title:"Welcome", subheader:'at online assesment', text:formResp.intro.text
+        sec:-1,
+        questionType:'info',
+        img:'https://primefaces.org/cdn/primeng/images/usercard.png',
+        title:formResp.systemGroup.startTitle,
+        subheader:formResp.systemGroup.startSubTitle,
+        text:formResp.intro.text,
+        systemGroup: formResp.systemGroup
     })
     formResp.questions!.push({
-        sec:-1,noControl:true,questionType:'info',img:'https://t3.ftcdn.net/jpg/02/91/52/22/360_F_291522205_XkrmS421FjSGTMRdTrqFZPxDY19VxpmL.jpg',title:"Finish", subheader:'well done', text:formResp.finish.text
+        sec:-1,
+        noControl:true,
+        questionType:'info',
+        img:'https://t3.ftcdn.net/jpg/02/91/52/22/360_F_291522205_XkrmS421FjSGTMRdTrqFZPxDY19VxpmL.jpg',
+        title:formResp.systemGroup.finishTitle,
+        subheader:formResp.systemGroup.finishSubTitle,
+        text:formResp.finish.text,
+        systemGroup: formResp.systemGroup
     })
   }

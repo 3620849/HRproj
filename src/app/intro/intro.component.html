@@ -4,6 +4,6 @@
     </ng-template>
     <p>{{data?.text}}</p> 
     <div class="flex flex-wrap align-items-center justify-content-between gap-3 h-3rem" *ngIf="!data?.noControl">
-        <p-button label="Start"  (click)="submit()" [style]="{float:'right'}"></p-button>    
+        <p-button [label]="data!.systemGroup.startBtn"  (click)="submit()" [style]="{float:'right'}"></p-button>    
     </div>
 </p-card>

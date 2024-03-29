@@ -13,6 +13,16 @@ export class Form {
     intro: Option;
     finish: Option;
     questions?: QuestionData[];
+    systemGroup: SystemGroup
+}
+export class SystemGroup {    
+       startTitle: string;
+       startSubTitle: string;
+       startBtn: string;
+       questionHeader: string;
+       submit: string;
+       finishTitle: string;
+       finishSubTitle: string;
 }
 export class FormResponse{
     list:Form[];
