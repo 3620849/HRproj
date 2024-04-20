@@ -11,6 +11,7 @@ import { getState } from '@ngrx/signals';
 import { User, UserExam } from '../shared/model/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AnswerData } from '../shared/model/answer-data.model';
+import { QuestionService } from '../question/question.service';
 @Component({
     selector: 'app-exam',
     standalone: true,
@@ -24,7 +25,8 @@ export class ExamComponent {
   data:WritableSignal<QuestionData|null>= signal(null);
   constructor(private route: ActivatedRoute,
      private examSrv: ExamService,
-     private barService:TopMenuBarService) {
+     private barService:TopMenuBarService,
+     public questionService:QuestionService) {
       effect(() => {
         const state = getState(this.examStore);
         const index = state.currentQuestionIndex;
@@ -45,6 +47,7 @@ export class ExamComponent {
   }
 
   loadQuestion(){
+    this.questionService.answeredQuestion(false);
     this.examStore.getQuestion(this.link);    
   }
   submitAnswer($event?:AnswerData){    

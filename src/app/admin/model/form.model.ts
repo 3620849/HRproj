@@ -23,6 +23,7 @@ export class SystemGroup {
        submit: string;
        finishTitle: string;
        finishSubTitle: string;
+       sec: string;
 }
 export class FormResponse{
     list:Form[];

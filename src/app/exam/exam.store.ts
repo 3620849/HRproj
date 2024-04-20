@@ -60,7 +60,7 @@ type ExamState = {
     formResp.questions!.unshift({
         sec:-1,
         questionType:'info',
-        img:'https://primefaces.org/cdn/primeng/images/usercard.png',
+        img:'https://cdn.dribbble.com/users/1631934/screenshots/4744305/media/ad876e97b1ff5b38f42921a88cade3c5.gif',
         title:formResp.systemGroup.startTitle,
         subheader:formResp.systemGroup.startSubTitle,
         text:formResp.intro.text,

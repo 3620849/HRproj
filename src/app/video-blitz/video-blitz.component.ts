@@ -1,10 +1,12 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Inject, Input, NgZone, OnChanges, OnInit, Output, PLATFORM_ID, SimpleChanges, ViewChild, WritableSignal, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, NgZone, OnChanges, OnInit, Output, PLATFORM_ID, SimpleChanges, ViewChild, WritableSignal, effect, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { Option, QuestionData } from '../shared/model/question-data.model';
 import { BaseFormComponent } from '../shared/model/base-form.component';
+import { QuestionService } from '../question/question.service';
+import { TimerService } from '../shared/services/timer.service';
 declare var MediaRecorder: any;
 @Component({
   selector: 'app-video-blitz',
@@ -23,12 +25,11 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
   questionText:WritableSignal<string> = signal<string>('');
   startCountdown:boolean;
   counterInterval:any;
-  moveTop:boolean;
   blitzTimer:WritableSignal<number> = signal<number>(0);
   intervalId:any;
-  TIMEOUT_BETWEEN_QUESTIONS=5000;
-  constructor() {
-    super()
+  TIMEOUT_BETWEEN_QUESTIONS=1000;
+  constructor(public questionService:QuestionService, public timerSrv:TimerService) {
+    super();
   }
   ngOnChanges(changes: SimpleChanges): void {
     const d:any = changes['data'];
@@ -37,7 +38,7 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
       const data = d['currentValue'];
       if(this.data.questionType === 'videoBlitz'){
         this.stopTimer = this.data.options!.reduce((acc:number,curr:Option)=>{
-          return acc+curr.sec!+5
+          return acc+curr.sec!+this.TIMEOUT_BETWEEN_QUESTIONS/1000
         },0)*1000;
       }
     }
@@ -48,8 +49,7 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
   }
   override setAnswers(): void {  
     setTimeout(()=>{ 
-      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].videoLink);  
-      this.moveTop = true; 
+      this.videoInputComponent.setSrc(this.userAnswer!.answerOptions[0].videoLink);
     }); 
   }
   ngOnInit(): void {
@@ -70,6 +70,7 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
     }, this.stopTimer);
   }
   setUserChoise($event:Blob){
+    this.questionService.answeredQuestion(true);
     let answer:AnswerData = {
       id: this.data.id,
       text: this.data.text,
@@ -84,26 +85,27 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
       this.startCountdown = false;
       return;
     } 
-    this.startCountdown = true;  
-    this.moveTop = false;  
-    this.questionText.set(this.data.options![question].text);
-    
+    this.startCountdown = true;
+    this.questionText.set(this.data.options![question].text); 
     this.startCountoDownTimer(question);
     setTimeout(()=>{
       this.startBlitz(++question);
-    },this.data.options![question].sec!*1000+5000)
+    },this.data.options![question].sec!*1000+this.TIMEOUT_BETWEEN_QUESTIONS)
   }
   startCountoDownTimer(question:number){ 
-    setTimeout(()=>{ 
-      this.moveTop=true;
+    setTimeout(()=>{
       this.blitzTimer.set(this.data.options![question].sec!);
       this.intervalId = setInterval(()=>{
         if(this.blitzTimer()<1){
           clearInterval(this.intervalId);
         }
-        this.blitzTimer.update(val=>val-1);
+        
+        this.blitzTimer.update(val=>{
+          const time = Math.max(val-1,0);
+          this.timerSrv.setTime(time);
+          return time});
       },1000)
-    },5000)
+    },this.TIMEOUT_BETWEEN_QUESTIONS)
   }
   setCurrentVideoTime($event:number){
     if(this.userAnswer){

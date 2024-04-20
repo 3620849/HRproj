@@ -63,13 +63,7 @@
                                 <input pInputText type="text" id="questionHeader" formControlName="questionHeader"/>
                                 <label for="questionHeader">Question</label>
                             </span>
-                        </span>
-                        <span class="translation">
-                            <span class="p-float-label">
-                                <input pInputText type="text" id="questionHeader" formControlName="questionHeader"/>
-                                <label for="questionHeader">sec</label>
-                            </span>
-                        </span> 
+                        </span>                        
                         <span class="translation">
                             <span class="p-float-label">
                                 <input pInputText type="text" id="submit" formControlName="submit"/>
@@ -88,6 +82,12 @@
                                 <label for="finishSubTitle">Finish subtitle</label>
                             </span>
                         </span>
+                        <span class="translation">
+                            <span class="p-float-label">
+                                <input pInputText type="text" id="sec" formControlName="sec"/>
+                                <label for="sec">sec</label>
+                            </span>
+                        </span>
                     </div> 
                 </div> 
             </p-panel>
@@ -100,7 +100,7 @@
                     <p-panel [toggleable]="true">
                         <ng-template pTemplate="header">
                             <div class="flex align-items-center gap-2">
-                                <span class="font-bold">Question</span>
+                                <span class="font-bold">{{form.get('systemGroup')!.get('questionHeader')!.value}}</span>
                             </div>
                         </ng-template>
                         <ng-template pTemplate="icons">
@@ -116,13 +116,14 @@
                             </span>
                         </div>
                         <div>
+                        @if(item.get('questionType')?.value?.code && item.get('questionType')?.value?.code !== 'videoBlitz'){
                         <div class="form-control-wraper">
                             <span class="p-float-label">
                                 <input [style]="{'width':'100%'}" pInputText formControlName="text" id="text"/>
                                 <label for="text">Question</label>
                             </span>
                         </div>
-                        @if(item.get('questionType')?.value?.code && item.get('questionType')?.value?.code !== 'videoBlitz'){
+                        
                             <div class="form-control-wraper">
                                 <span class="p-float-label">
                                     <input [style]="{'width':'150px'}" pInputText formControlName="sec" id="sec"/>

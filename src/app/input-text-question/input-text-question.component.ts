@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { Option, QuestionData } from '../shared/model/question-data.model';
 import { CommonModule } from '@angular/common';
-import { FormArray, FormBuilder, FormGroup,ReactiveFormsModule} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup,ReactiveFormsModule, Validators} from '@angular/forms';
 import { QuestionType } from '../shared/model/question-type.model';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { InputTextModule } from 'primeng/inputtext';
 import { BaseFormComponent } from '../shared/model/base-form.component';
+import { QuestionService } from '../question/question.service';
 @Component({
   selector: 'app-input-text-question',
   standalone: true,
@@ -14,7 +15,7 @@ import { BaseFormComponent } from '../shared/model/base-form.component';
   styleUrl: './input-text-question.component.scss'
 })
 export class InputTextQuestionComponent extends BaseFormComponent  implements OnChanges{
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, public questionService:QuestionService) {
     super(); 
     this.form = new FormGroup({
       myOptions: this.fb.array([])
@@ -37,6 +38,9 @@ export class InputTextQuestionComponent extends BaseFormComponent  implements On
 
       this.userChoise.emit(res);
     })
+    this.form.valueChanges.subscribe(()=>{
+      this.questionService.answeredQuestion(this.form.valid)    
+    })
   }
   ngOnChanges(changes: SimpleChanges): void {
     const d:any = changes['data'];
@@ -54,7 +58,7 @@ export class InputTextQuestionComponent extends BaseFormComponent  implements On
 
   buildForm(){
     this.data?.options?.forEach((el:Option, i:number) => {
-      const control = this.fb.control('');
+      const control = this.fb.control('',[Validators.required]);
       this.optionss.push(control);
     });
   }

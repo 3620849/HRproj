@@ -29,8 +29,8 @@ export class FormEditorComponent {
   form:FormGroup;
   questions:FormArray = this.fb.array([
     new FormGroup({
-      questionType: this.fb.control('',Validators.required),
-      sec: this.fb.control('0',Validators.required),
+      questionType: this.fb.control({ name: 'Video', code: 'video' },Validators.required),
+      sec: this.fb.control('5',Validators.required),
       text: this.fb.control('',Validators.required),
       options: this.fb.array([])
     })
@@ -89,6 +89,7 @@ export class FormEditorComponent {
         submit: this.fb.control(data.systemGroup.submit,Validators.required),
         finishTitle: this.fb.control(data.systemGroup.finishTitle,Validators.required),
         finishSubTitle: this.fb.control(data.systemGroup.finishSubTitle,Validators.required),
+        sec: this.fb.control(data.systemGroup.sec,Validators.required),
       }),
       title: this.fb.control(data.title,Validators.required),
       company:this.fb.control(data.company,Validators.required),
@@ -130,10 +131,11 @@ export class FormEditorComponent {
         submit: this.fb.control("Submit",Validators.required),
         finishTitle: this.fb.control("Finish",Validators.required),
         finishSubTitle: this.fb.control("well done",Validators.required),
+        sec: this.fb.control("sec",Validators.required),
       }),
       title: this.fb.control('',Validators.required),
       company:this.fb.control('',Validators.required),
-      status: this.fb.control('',Validators.required),
+      status: this.fb.control({ name: 'ACTIVE', code: 'ACTIVE' },Validators.required),
       logo: this.fb.control('',Validators.required),
       intro: new FormGroup({
         text: this.fb.control(this.defaultIntro,Validators.required)
@@ -148,8 +150,8 @@ export class FormEditorComponent {
     } 
   }
   addQuestion(q:QuestionData|null=null){
-    let qTypeV = q?.questionType? this.findType(q.questionType) : '';
-    let secV = q?.sec? q.sec : 0;
+    let qTypeV = q?.questionType? this.findType(q.questionType) : { name: 'Video', code: 'video' };
+    let secV = q?.sec? q.sec : -1;
     let textV = q?.text? q.text : '';
     let optionsV:any[] = [];
     if(q?.options && q.options.length>0){
@@ -165,8 +167,9 @@ export class FormEditorComponent {
       sec: this.fb.control(secV),
       text: this.fb.control(textV,Validators.required),
       options: this.fb.array(optionsV)
-    })
-    formGroup.get('sec')!.setValidators(this.requiredIfFieldNotEq(formGroup, 'questionType','videoBlitz'))
+    })  
+    formGroup.get('sec')!.setValidators(this.requiredIfFieldNotEq(formGroup, 'questionType','videoBlitz'));
+    formGroup.get('text')!.setValidators(this.requiredIfFieldNotEq(formGroup, 'questionType','videoBlitz'));
     this.questions.push(formGroup);
   }
 
@@ -187,7 +190,7 @@ export class FormEditorComponent {
     question.get('options')
     .push(new FormGroup({
       text:this.fb.control('',Validators.required),
-      sec:this.fb.control('0',Validators.required)
+      sec:this.fb.control('-1',Validators.required)
     }));
   }
 

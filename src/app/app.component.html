@@ -1,5 +1,5 @@
 <div class="app-container">
-    <app-top-menu-bar [barType]="barType"></app-top-menu-bar>
+    <app-top-menu-bar *ngIf="barType==='common'" [barType]="barType"></app-top-menu-bar>
     <div class="content-container">
         <router-outlet></router-outlet>
     </div>

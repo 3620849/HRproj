@@ -3,10 +3,8 @@
     <div class="video-controls-menu" [ngClass]="{'hide-controls':hideControls}">
         <p-button  (click)="startRecord()" icon="pi pi-caret-right" [rounded]="true"></p-button>
     </div>
-    <div class="video-controls-text" *ngIf="startCountdown || userAnswer" [ngClass]="{'move-top':moveTop}">
+    <div class="video-controls-text" *ngIf="startCountdown || userAnswer" [ngClass]="{'move-top':true}">
         <div>{{questionText()}}</div>
     </div>
-    <div class="blitz-timer" *ngIf="blitzTimer() > 0">
-        <p-button   [rounded]="true" severity="info">{{blitzTimer()}}</p-button>
-    </div>
 </div>
+ 

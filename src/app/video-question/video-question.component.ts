@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { BaseFormComponent } from '../shared/model/base-form.component';
+import { QuestionService } from '../question/question.service';
 declare var MediaRecorder: any;
 @Component({
   selector: 'app-video-answer',
@@ -31,7 +32,7 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
   videoInputComponent:VideoInputComponent;
   @Output()
   videoStarted:EventEmitter<any> = new EventEmitter();
-  constructor() {
+  constructor(public questionService:QuestionService) {
     super();
   }
   ngOnInit(): void {
@@ -51,6 +52,7 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
     }, this.data.sec! * 1000)
   }
   setUserChoise($event:Blob){
+    this.questionService.answeredQuestion(true);
     let answer:AnswerData = {
       id: this.data.id,
       text: this.data.text,

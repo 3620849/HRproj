@@ -2,7 +2,7 @@
     <div class="checkbox-component" formArrayName="myOptions">
         @for(item of data.options; track item; let index = $index){
             <div class="field-checkbox">
-                <p-radioButton  [inputId]="''+index" [value]="'userChoise'+index" [formControlName]="getControlName(data.questionType, index)"></p-radioButton>
+                <p-radioButton  [inputId]="''+index" [value]="'userChoise'+index" (onClick)="checkPress()" [formControlName]="getControlName(data.questionType, index)"></p-radioButton>
                 <label [for]="'k'+index" class="ml-2">{{ item.text }}</label>
             </div>
         }

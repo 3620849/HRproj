@@ -6,6 +6,7 @@ import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/
 import { QuestionType } from '../shared/model/question-type.model';
 import { AnswerData, AnswerOptions } from '../shared/model/answer-data.model';
 import { BaseFormComponent } from '../shared/model/base-form.component';
+import { QuestionService } from '../question/question.service';
 @Component({
   selector: 'app-check-box-question',
   standalone: true,
@@ -15,7 +16,7 @@ import { BaseFormComponent } from '../shared/model/base-form.component';
 })
 export class CheckBoxQuestionComponent extends BaseFormComponent implements OnChanges{
   
-  constructor(private fb: FormBuilder) { 
+  constructor(private fb: FormBuilder, public questionService:QuestionService) { 
     super();
     this.form = new FormGroup({
       myOptions: this.fb.array([])
@@ -99,5 +100,8 @@ export class CheckBoxQuestionComponent extends BaseFormComponent implements OnCh
       return '0';
     }
     return ''+index;
+  }
+  checkPress(){
+    this.questionService.answeredQuestion(true);
   }
 }

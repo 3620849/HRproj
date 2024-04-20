@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Inject, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Inject, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, PLATFORM_ID, SimpleChanges, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TopMenuBarService } from '../top-menu-bar/top-menu-bar.service';
 declare var MediaRecorder: any;
@@ -33,15 +33,15 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   onStreamReady:EventEmitter<any> = new EventEmitter();
   @Output()
   currentTime:EventEmitter<number> = new EventEmitter();
-  constructor(@Inject(PLATFORM_ID) private _platform: Object) {
+  showControl:boolean;
+  constructor(@Inject(PLATFORM_ID) private _platform: Object,private _cdr: ChangeDetectorRef) {
   }
   ngOnInit(){
-     
   }
   async onStart(){
     if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
 
-      this.videoStream = await navigator.mediaDevices.getUserMedia({video: true, audio:false});
+      this.videoStream = await navigator.mediaDevices.getUserMedia({video: { frameRate: { exact: 16 } }, audio:false});
       this.audioStream = await navigator.mediaDevices.getUserMedia({video: false, audio:
         { sampleSize: 16, sampleRate: 44100, echoCancellation: true, noiseSuppression: true }});
       this.onStreamReady.emit();
@@ -71,8 +71,8 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.recordedChunks = [];
     let options: any = {
         mimeType: 'video/webm',
-        audioBitsPerSecond: 128000,
-        videoBitsPerSecond: 2500000
+        audioBitsPerSecond: 64000,
+        videoBitsPerSecond: 128000
     };
     try {
         this.mediaRecorder = new MediaRecorder(this.stream, options);
@@ -106,6 +106,8 @@ export class VideoInputComponent implements OnInit, OnDestroy {
         this.mediaRecorder.ondataavailable = (event: any) => {
             if (event.data && event.data.size > 0) {
                 this.recordedChunks.push(event.data);
+                this.showControl = true;
+                this._cdr.detectChanges();
             }
         };
     } catch (error) {

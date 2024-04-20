@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, effect } from '@angular/core';
 import { NgSwitch, NgSwitchCase, NgSwitchDefault} from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
@@ -14,6 +14,8 @@ import { TopMenuBarService } from '../top-menu-bar/top-menu-bar.service';
 import { VideoBlitzComponent } from '../video-blitz/video-blitz.component';
 import { CardModule } from 'primeng/card';
 import { IntroComponent } from '../intro/intro.component';
+import { QuestionService } from './question.service';
+import { TimerService } from '../shared/services/timer.service';
 @Component({
   selector: 'app-question',
   standalone: true,
@@ -35,36 +37,36 @@ import { IntroComponent } from '../intro/intro.component';
   templateUrl: './question.component.html',
   styleUrl: './question.component.scss'
 })
-export class QuestionComponent implements OnInit, OnChanges {
+export class QuestionComponent implements OnInit {
   @Input()
   data:QuestionData
   @Output()
   getQuestion:EventEmitter<any> = new EventEmitter();
   @Output()
-  submitAnswer:EventEmitter<any> = new EventEmitter(); 
-  constructor(private barService:TopMenuBarService){
+  submitAnswer:EventEmitter<any> = new EventEmitter();
+  showSubmit:boolean = true;
+  timer:number;
+  constructor(private barService:TopMenuBarService, public questionService:QuestionService, public timerSrv:TimerService){
+    effect(()=>{
+     this.showSubmit = questionService.questionInteracted();
+     this.timer = timerSrv.currentTime();
+    })
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     const d:any = changes['data'];
     if(d && d['currentValue']){
-      let time = this.data.sec;
-       
-      if(this.data.questionType === 'videoBlitz'){
-        time = this.data.options?.reduce((acc:number,curr:any)=>{
-          return acc+curr.sec+5
-        },0)
-      }
-      this.barService.setTimer(time);
-      if(this.data.startOnShow){
-        this.barService.startTimer();
+      const t = this.data.questionType;
+      if(t === 'videoBlitz' || t === 'video' ){       
+      }else{
+        this.timerSrv.setTime(this.data.sec ? this.data.sec : 0);
+        this.timerSrv.startTimer();
       }
     }
   }
+
   userAnswer:AnswerData|null;
   setUserChoise($event:AnswerData){
-    //$event.questionType = this.data.questionType;
-    console.log('in question ', $event);
-    
     this.userAnswer = $event;
   }
   submit(){
@@ -72,10 +74,9 @@ export class QuestionComponent implements OnInit, OnChanges {
     this.userAnswer =  null;
   }
   ngOnInit(){
-    //this.getQuestion.emit(true)
   }
   started(){
-    this.barService.startTimer();
+   // this.barService.startTimer(); meanwhile delete time on top at all
   }
   get questionData():QuestionData|undefined{
     return this.data;
