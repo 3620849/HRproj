@@ -2,6 +2,18 @@
     display: flex;
     justify-content: center;
     height: 100%;
+    .load-block{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        padding: 10px;
+        .progress{
+            margin-top: 10px;
+            width: 100%;
+            height: 30px;
+        }
+    }
     .exam-content{
         height: 100%;
         display: flex;
@@ -10,6 +22,6 @@
         flex-direction: column;
         app-question {
             height: 100%;
-        }
+        }        
     }
 }

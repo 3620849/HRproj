@@ -12,22 +12,34 @@ import { User, UserExam } from '../shared/model/user.model';
 import { v4 as uuidv4 } from 'uuid';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { QuestionService } from '../question/question.service';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
+import { LoaderService } from '../shared/services/loader.service';
+
 @Component({
     selector: 'app-exam',
     standalone: true,
     templateUrl: './exam.component.html',
     styleUrl: './exam.component.scss',
-    imports: [CommonModule, IntroComponent, QuestionComponent]
+    imports: [
+      ProgressBarModule,
+      CommonModule,
+      IntroComponent,
+      QuestionComponent]
 })
 export class ExamComponent {
   link:string;
   readonly examStore = inject(ExamStore);
   data:WritableSignal<QuestionData|null>= signal(null);
+  loadPercent:number = 0;
   constructor(private route: ActivatedRoute,
      private examSrv: ExamService,
      private barService:TopMenuBarService,
-     public questionService:QuestionService) {
+     public questionService:QuestionService,
+     public loaderService: LoaderService
+     ) {
       effect(() => {
+        this.loadPercent = loaderService.currentLoad();
         const state = getState(this.examStore);
         const index = state.currentQuestionIndex;
         if( state.form && state.form.questions){

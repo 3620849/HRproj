@@ -1,6 +1,12 @@
 <div class="exam-component">
     @if(!data() || examStore.isLoading()){
-        loading...
+        <div class="load-block">
+            <div>loading...</div>
+            <div class="progress" *ngIf="loadPercent<100">
+                <p-progressBar  [value]="loadPercent"></p-progressBar>
+            </div>        
+        </div>
+        
     } @else if(data()?.questionType === 'info'){
         <div class="exam-content" *ngIf="data()?.questionType === 'info'">
             <app-intro [data]="data()!" (submitEvent)="loadQuestion()">
