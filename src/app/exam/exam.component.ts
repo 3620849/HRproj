@@ -62,7 +62,8 @@ export class ExamComponent {
     this.questionService.answeredQuestion(false);
     this.examStore.getQuestion(this.link);    
   }
-  submitAnswer($event?:AnswerData){    
+  submitAnswer($event?:AnswerData){
+    console.log($event);
     const ans = this.formatAnswer($event!);
     this.examStore.setLoading(true);
     this.examSrv.sendAnswer(ans).subscribe(()=>{

@@ -34,6 +34,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   @Output()
   currentTime:EventEmitter<number> = new EventEmitter();
   showControl:boolean;
+  resolution:{height:number |undefined,width:number|undefined};
   constructor(@Inject(PLATFORM_ID) private _platform: Object,private _cdr: ChangeDetectorRef) {
   }
   ngOnInit(){
@@ -42,6 +43,8 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
 
       this.videoStream = await navigator.mediaDevices.getUserMedia({video: { frameRate: { exact: 16 } }, audio:false});
+      const {width, height} = this.videoStream.getVideoTracks()[0].getSettings();
+      this.resolution = {width, height};
       this.audioStream = await navigator.mediaDevices.getUserMedia({video: false, audio:
         { sampleSize: 16, sampleRate: 44100, echoCancellation: true, noiseSuppression: true }});
       this.onStreamReady.emit();
@@ -120,7 +123,7 @@ registerVideoRecordingEvent() {
           const videoBuffer = new Blob(this.recordedChunks, {
               type: 'video/'+this.mediaType
           });
-          this.onRecordReady.emit({blob:videoBuffer,type:this.mediaType});
+          this.onRecordReady.emit({blob:videoBuffer,type:this.mediaType,resolution: this.resolution});
           this.downloadVideoUrl = window.URL.createObjectURL(videoBuffer);
           this.video.nativeElement.src = this.downloadVideoUrl;
           this.video.nativeElement.srcObject = null;          

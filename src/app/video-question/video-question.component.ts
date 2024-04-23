@@ -54,7 +54,7 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
       this.videoInputComponent.stopVideoRecording();
     }, this.data.sec! * 1000)
   }
-  setUserChoise($event:Blob){
+  setUserChoise($event:{blob:Blob,resolution:any,type:string}){
     this.questionService.answeredQuestion(true);
     let answer:AnswerData = {
       id: this.data.id,

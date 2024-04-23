@@ -22,40 +22,51 @@ export class ExamService {
     const user:User = JSON.parse(userStr);
     data.userId = user.id;
     if(data.questionType === 'video' ||data.questionType === 'videoBlitz'){
-      const option = data.answerOptions!.find(option => option.video);
-      const blob = option!.video.blob
-      const videoType = option!.video.type;
-      const file = new File([blob], "myvideo."+videoType,{type:"video/"+videoType});
-      const formData = new FormData();
-      formData.append('file', file, file.name);
-      let headers = new HttpHeaders();
-      headers = headers.delete('Content-Type');
-      const req = new HttpRequest("POST", environment.api+"/upload", formData,{headers, reportProgress: true });
-      return this.http.request<any>(req).pipe(
-        map(event => this.getEventMessage(event, file)),
-        tap(message => this.updateProgress(message)),
-        last(),        
-        switchMap((media:any)=>{
-            data.answerOptions = [{videoLink:media.url}] 
-            return this.http.post(environment.api+"/exam",data)
-        }),
-        catchError(this.handleError(file))
-      );
+      return this.sendFileToServer(data);
     }else{
       return this.http.post(environment.api+"/exam",data)
     }
   }
+
+  sendFileToServer(data:any){
+    const option = data.answerOptions!.find((option:any) => option.video);
+    const blob = option!.video.blob
+    const videoType = option!.video.type;
+    const file = new File([blob], "myvideo."+videoType,{type:"video/"+videoType});
+    const fileUploadMetaDataList: {}[] = [];
+    fileUploadMetaDataList.push({resolution:option!.video.resolution})
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('fileUploadMetadataList', JSON.stringify(fileUploadMetaDataList));
+    let headers = new HttpHeaders();
+    headers = headers.delete('Content-Type');
+    const req = new HttpRequest("POST", environment.api+"/upload", formData,{headers, reportProgress: true });
+    return this.http.request<any>(req).pipe(
+      map(event => this.getEventMessage(event, file)),
+      tap(message => this.updateProgress(message)),
+      last(),        
+      switchMap((media:any)=>{
+          data.answerOptions = [{videoLink:media.url}] 
+          return this.http.post(environment.api+"/exam",data)
+      }),
+      catchError(this.handleError(file))
+    );
+  }
+
   loadForm(link: string) {
     return this.http.get<Form>(environment.api+"/exam?link="+link)
   }
+
   updateProgress(msg:any ){
     if(msg && msg.state === 'UploadProgress' && msg.loading){
       this.loaderService.setLoad(msg.loading)
     }    
   }
+
   handleError(e:any):any{
     console.log(e);    
   }
+
   private getEventMessage(event: HttpEvent<Media>, file: File): LoadingProgres | Media {
     switch (event.type) {
       case HttpEventType.Sent:
@@ -72,4 +83,5 @@ export class ExamService {
         return {state:'Other', msg:`File "${file.name}" surprising upload event: ${event.type}.`};
     }
   }
+
 }
