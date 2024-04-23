@@ -5,6 +5,7 @@ import { VideoInputComponent } from '../video-input/video-input.component';
 import { AnswerData } from '../shared/model/answer-data.model';
 import { BaseFormComponent } from '../shared/model/base-form.component';
 import { QuestionService } from '../question/question.service';
+import { TimerService } from '../shared/services/timer.service';
 declare var MediaRecorder: any;
 @Component({
   selector: 'app-video-answer',
@@ -32,7 +33,7 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
   videoInputComponent:VideoInputComponent;
   @Output()
   videoStarted:EventEmitter<any> = new EventEmitter();
-  constructor(public questionService:QuestionService) {
+  constructor(public questionService:QuestionService,public timerSrv:TimerService) {
     super();
   }
   ngOnInit(): void {
@@ -47,6 +48,8 @@ export class VideoQuestionComponent extends BaseFormComponent implements OnInit{
     this.videoStarted.emit();
     this.hideControls = true;
     this.videoInputComponent.startRecord();
+    this.timerSrv.setTime(this.data.sec!);
+    this.timerSrv.startTimer();
     setTimeout(()=>{
       this.videoInputComponent.stopVideoRecording();
     }, this.data.sec! * 1000)

@@ -87,25 +87,12 @@ export class VideoBlitzComponent  extends BaseFormComponent implements OnInit{
     } 
     this.startCountdown = true;
     this.questionText.set(this.data.options![question].text); 
-    this.startCountoDownTimer(question);
+    //this.startCountoDownTimer(question);
+    this.timerSrv.setTime(this.data.options![question].sec!);
+    this.timerSrv.startTimer();
     setTimeout(()=>{
       this.startBlitz(++question);
     },this.data.options![question].sec!*1000+this.TIMEOUT_BETWEEN_QUESTIONS)
-  }
-  startCountoDownTimer(question:number){ 
-    setTimeout(()=>{
-      this.blitzTimer.set(this.data.options![question].sec!);
-      this.intervalId = setInterval(()=>{
-        if(this.blitzTimer()<1){
-          clearInterval(this.intervalId);
-        }
-        
-        this.blitzTimer.update(val=>{
-          const time = Math.max(val-1,0);
-          this.timerSrv.setTime(time);
-          return time});
-      },1000)
-    },this.TIMEOUT_BETWEEN_QUESTIONS)
   }
   setCurrentVideoTime($event:number){
     if(this.userAnswer){

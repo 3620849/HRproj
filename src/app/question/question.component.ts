@@ -57,6 +57,7 @@ export class QuestionComponent implements OnInit {
     const d:any = changes['data'];
     if(d && d['currentValue']){
       const t = this.data.questionType;
+      //in this mode timer run after user start recording so timer set inside this components not here
       if(t === 'videoBlitz' || t === 'video' ){       
       }else{
         this.timerSrv.setTime(this.data.sec ? this.data.sec : 0);

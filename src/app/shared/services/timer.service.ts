@@ -7,6 +7,9 @@ import { Injectable, WritableSignal, signal } from "@angular/core";
     currentTime:WritableSignal<number> = signal(0);
     intervalId:any;
     setTime(val:number){
+        if(this.intervalId){
+            clearInterval(this.intervalId);
+        }
         this.currentTime.update(()=>val);
     }
 
