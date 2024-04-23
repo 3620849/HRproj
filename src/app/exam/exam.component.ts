@@ -63,7 +63,7 @@ export class ExamComponent {
     this.examStore.getQuestion(this.link);    
   }
   submitAnswer($event?:AnswerData){
-    console.log($event);
+    //TODO here event modified and it is bug make clone of it but not clone blob if it present
     const ans = this.formatAnswer($event!);
     this.examStore.setLoading(true);
     this.examSrv.sendAnswer(ans).subscribe(()=>{

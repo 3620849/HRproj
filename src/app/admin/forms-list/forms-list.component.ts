@@ -34,7 +34,12 @@ export class FormsListComponent implements OnInit {
     this.formsListStore.loadForms(0,10);
     
   }
-
+  isDemo(f:string){
+    if(!f || f.length<4){
+      return false;
+    }
+    return f.substring(f.length-4) === 'demo'   
+  }
   public getSeverity(status: string): any {
     switch (status) {
       case 'ACTIVE':
