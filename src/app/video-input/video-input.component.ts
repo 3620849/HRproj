@@ -41,10 +41,10 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   }
   async onStart(){
     if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-
-      this.videoStream = await navigator.mediaDevices.getUserMedia({video: { frameRate: { exact: 16 } }, audio:false});
+      const isPortrait = screen.availHeight > screen.availWidth;      
+      this.videoStream = await navigator.mediaDevices.getUserMedia({video: { frameRate: { exact: 16 },facingMode: {exact: "user"} }, audio:false});
       const {width, height} = this.videoStream.getVideoTracks()[0].getSettings();
-      this.resolution = {width, height};
+      this.resolution = {width: isPortrait ? height : width, height:isPortrait ? width:height};
       this.audioStream = await navigator.mediaDevices.getUserMedia({video: false, audio:
         { sampleSize: 16, sampleRate: 44100, echoCancellation: true, noiseSuppression: true }});
       this.onStreamReady.emit();
