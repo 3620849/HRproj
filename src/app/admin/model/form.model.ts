@@ -35,6 +35,7 @@ export class AnsweredUser {
       name: string;
       date: number;
       status: string;
+      publicLink: string;
       review: number;
       userId: string;
       examId: string;

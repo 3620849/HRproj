@@ -24,6 +24,7 @@ export const routes: Routes = [
             {path:'answers-list/:id',component:AnswersListComponent},
             {path:'answer/:id',component:AnswerComponent}
         ]
-        },
+    },
+    {path:'answer/public/:id',component:AnswerComponent},
     {path:'exam/:id',component:ExamComponent}
 ];

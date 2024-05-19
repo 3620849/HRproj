@@ -16,6 +16,7 @@ export interface QuestionData {
     subheader?:string;
     img?:string;
     systemGroup: SystemGroup;
+    shareable?: boolean;
 }
 export interface Option {
     id?:string,

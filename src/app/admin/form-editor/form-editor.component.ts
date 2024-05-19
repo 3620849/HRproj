@@ -16,10 +16,11 @@ import { QuestionData } from '../../shared/model/question-data.model';
 import { Option } from '../../shared/model/question-data.model';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { CheckboxModule } from 'primeng/checkbox';
 @Component({
   selector: 'app-form-editor',
   standalone: true,
-  imports: [ToastModule,PanelModule,InputTextareaModule ,ReactiveFormsModule,DropdownModule,FileUploadModule,FormsModule,CommonModule,InputTextModule,CardModule],
+  imports: [CheckboxModule,ToastModule,PanelModule,InputTextareaModule ,ReactiveFormsModule,DropdownModule,FileUploadModule,FormsModule,CommonModule,InputTextModule,CardModule],
   templateUrl: './form-editor.component.html',
   styleUrl: './form-editor.component.scss'
 })
@@ -27,14 +28,7 @@ export class FormEditorComponent {
   readonly currentFormStore = inject(CurrentFormStore);
   reviews:number|undefined = 0;
   form:FormGroup;
-  questions:FormArray = this.fb.array([
-    new FormGroup({
-      questionType: this.fb.control({ name: 'Video', code: 'video' },Validators.required),
-      sec: this.fb.control('5',Validators.required),
-      text: this.fb.control('',Validators.required),
-      options: this.fb.array([])
-    })
-  ]);
+  questions:FormArray;
   defaultIntro = 'Congradulation, you were selected as candidate to this role.'+ 
   'After you press button below will begin demonstration of our app wit example question you can stop' + 
   'it in any time and return back in any time later.';
@@ -70,8 +64,8 @@ export class FormEditorComponent {
         }
       })
       this.currentFormStore.loadForm(this.id);
-    }{
-      setTimeout(()=>this.buildForm(null));
+    }else{ 
+      this.buildEmptyForm();
     }
   }
   ngOnInit() {
@@ -80,6 +74,15 @@ export class FormEditorComponent {
 
   buildFormByData(data:Form){
     const statusVal:any = this.findStatus(data.status);
+    this.questions = this.fb.array([
+      new FormGroup({
+        questionType: this.fb.control({ name: 'Video', code: 'video' },Validators.required),
+        sec: this.fb.control('5',Validators.required),
+        text: this.fb.control('',Validators.required),
+        options: this.fb.array([]),
+        shareable: this.fb.control(true)
+      })
+    ]);
     const group = {
       systemGroup: new FormGroup({
         startTitle: this.fb.control(data.systemGroup.startTitle,Validators.required),
@@ -121,7 +124,16 @@ export class FormEditorComponent {
   findType(text:string){
     return this.qType.find(el=> el.code === text);
   }
-  buildForm(data:any){
+  buildEmptyForm(){    
+    this.questions = this.fb.array([
+      new FormGroup({
+        questionType: this.fb.control({ name: 'Video', code: 'video' },Validators.required),
+        sec: this.fb.control('5',Validators.required),
+        text: this.fb.control('',Validators.required),
+        options: this.fb.array([]),
+        shareable: this.fb.control(true)
+      })
+    ]);
     this.form = new FormGroup({
       systemGroup: new FormGroup({
         startTitle: this.fb.control("Welcome",Validators.required),
@@ -145,9 +157,6 @@ export class FormEditorComponent {
         text: this.fb.control(this.defaultFinish,Validators.required)
       })
     })
-    if(data){
-       this.form.patchValue(data);
-    } 
   }
   addQuestion(q:QuestionData|null=null){
     let qTypeV = q?.questionType? this.findType(q.questionType) : { name: 'Video', code: 'video' };
@@ -162,7 +171,12 @@ export class FormEditorComponent {
         }))
       })
     }
+    let shareable = true;
+    if(q && q?.shareable != undefined){
+      shareable = q?.shareable;
+    }
     const formGroup:FormGroup = new FormGroup({
+      shareable:this.fb.control(shareable),
       questionType: this.fb.control(qTypeV,Validators.required),
       sec: this.fb.control(secV),
       text: this.fb.control(textV,Validators.required),
@@ -206,6 +220,7 @@ export class FormEditorComponent {
   save(){
     if(this.form.value){
       const formDto = JSON.parse(JSON.stringify(this.form.value));
+      console.log(formDto);      
       formDto.status  = formDto.status.code;
       formDto.questions?.map((question:any) => {
         question.questionType = question.questionType.code;
