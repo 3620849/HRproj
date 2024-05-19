@@ -1,3 +1,3 @@
 export const environment = {
-    api:"https://server.vidify.site/api/v1"
+    api:"http://localhost:8080/api/v1"
 };

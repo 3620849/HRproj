@@ -18,7 +18,9 @@ export class AdminService {
     loadForms(offset:number,size:number):Observable<FormResponse>{
      return this.http.get<FormResponse>(environment.api+"/forms?offset="+offset+"&size="+size)
     }
-
+    loadPublicTesteeAnswers(publicLink: string):Observable<AnswerReviewResponse> {
+      return this.http.get<AnswerReviewResponse>(environment.api+"/answer/public/"+publicLink)
+    }
     loadTesteeAnswers(examId: string,userId: string):Observable<AnswerReviewResponse> {
       return this.http.get<AnswerReviewResponse>(environment.api+"/answer/"+examId+"?userId="+userId)
     }

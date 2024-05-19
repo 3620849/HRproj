@@ -39,21 +39,63 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   }
   ngOnInit(){
   }
-  async onStart(){
-    if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-      const isPortrait = screen.availHeight > screen.availWidth;      
-      this.videoStream = await navigator.mediaDevices.getUserMedia({video: { frameRate: { exact: 16 },facingMode: {exact: "user"} }, audio:false});
-      const {width, height} = this.videoStream.getVideoTracks()[0].getSettings();
-      this.resolution = {width: isPortrait ? height : width, height:isPortrait ? width:height};
-      this.audioStream = await navigator.mediaDevices.getUserMedia({video: false, audio:
-        { sampleSize: 16, sampleRate: 44100, echoCancellation: true, noiseSuppression: true }});
-      this.onStreamReady.emit();
+  async onStart() {
+    // Check if the code is running in the browser and if mediaDevices is supported
+    if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+      try {
+        // Determine if the device is in portrait orientation
+        const isPortrait = screen.availHeight > screen.availWidth;
+
+        //Get video stream with specified parameters, including resolution constraints
+        this.videoStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            frameRate: { exact: 16 },
+            facingMode: { ideal: "user" },
+            width: { max: 1280 },
+            height: { max: 720 }
+          },
+          audio: false
+        });
+
+        // Extract width and height from the video stream settings
+        const { width, height } = this.videoStream.getVideoTracks()[0].getSettings();
+        this.resolution = {
+          width: isPortrait ? height : width,
+          height: isPortrait ? width : height
+        };
+
+        // Get audio stream with specified parameters
+        this.audioStream = await navigator.mediaDevices.getUserMedia({
+          video: false,
+          audio: {
+            sampleSize: 16,
+            sampleRate: 44100,
+            echoCancellation: true,
+            noiseSuppression: true
+          }
+        });
+
+        // Emit an event indicating that the streams are ready
+        this.onStreamReady.emit();
+
+        // Get the video element reference
         const _video = this.video.nativeElement;
-        this.stream = new MediaStream([...this.videoStream.getVideoTracks(), ...this.audioStream.getAudioTracks()])
+
+        // Combine video and audio streams into a single MediaStream
+        this.stream = new MediaStream([
+          ...this.videoStream.getVideoTracks(),
+          ...this.audioStream.getAudioTracks()
+        ]);
+
+        // Set the combined stream as the source for the video element and start playing
         _video.srcObject = this.stream;
-        _video.play(); 
+        _video.play();
+      } catch (error) {
+        // Log any errors that occur during media device access
+        console.error('Error accessing media devices:', error);
+      }
     }
-  } 
+  }
   onStop() {
     this.video.nativeElement.pause();
     (this.video.nativeElement.srcObject as MediaStream)?.getTracks()?.forEach(t=>t.stop());
@@ -95,7 +137,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.isRecording = !this.isRecording;
     this.onDataAvailableVideoEvent();
     this.registerVideoRecordingEvent();
-     
+
   }
   stopVideoRecording() {
     this.video.nativeElement.pause();
@@ -126,7 +168,7 @@ registerVideoRecordingEvent() {
           this.onRecordReady.emit({blob:videoBuffer,type:this.mediaType,resolution: this.resolution});
           this.downloadVideoUrl = window.URL.createObjectURL(videoBuffer);
           this.video.nativeElement.src = this.downloadVideoUrl;
-          this.video.nativeElement.srcObject = null;          
+          this.video.nativeElement.srcObject = null;
           this.video.nativeElement.play();
       };
   } catch (error) {

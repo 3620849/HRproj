@@ -39,12 +39,16 @@ export class AnswerComponent {
 
   ngOnInit() {
     const examId = this.route.snapshot.paramMap.get('id');
-     
+    const isPublicLink = this.router.url.includes('public');
+    const publicLink:any = isPublicLink ? examId : undefined;
     const state:any = this.location.getState();
     const userId = state.userId;
     //TODO get answer by userid and examid
     if(examId && userId){
-      this.answerStore.loadAnswersList(examId, userId);
+      this.answerStore.loadAnswersList(examId, userId );
+    }
+    if(publicLink){
+      this.answerStore.loadPublicAnswer( publicLink );
     }
   }
 }
