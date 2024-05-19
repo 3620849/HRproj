@@ -2,7 +2,7 @@
     @if(currentFormStore.isLoading() || !form){
         ...loading
     } @else {
-        <form   [formGroup]="form" (ngSubmit)="save()" >
+        <form [formGroup]="form" (ngSubmit)="save()" >
             <p-card [header]="formHeader">
                 <div class="form-control-wraper">
                     <span class="p-float-label">
@@ -104,10 +104,18 @@
                             </div>
                         </ng-template>
                         <ng-template pTemplate="icons">
+                            
+                            <span *ngIf="!item.get('shareable')?.value" class="pi pi-eye-slash"></span>
                             <button *ngIf="index > 0" class="p-panel-header-icon p-link mr-2" [disabled]="!!reviews" (click)="deleteQuestion(index)">
                                 <span class="pi pi-trash"></span>
                             </button>
                         </ng-template>
+                        
+                        <div class="form-control-wraper margin-bottom-30">
+                            <p-checkbox   formControlName="shareable" [binary]="true" inputId="priv"></p-checkbox>
+                            <label for="priv"> shareable (share answer with public link) </label>
+                            <p>
+                        </div>
                         
                         <div class="form-control-wraper">
                             <span class="p-float-label">
@@ -123,7 +131,7 @@
                                 <label for="text">Question</label>
                             </span>
                         </div>
-                        
+
                             <div class="form-control-wraper">
                                 <span class="p-float-label">
                                     <input [style]="{'width':'150px'}" pInputText formControlName="sec" id="sec"/>
