@@ -2,12 +2,13 @@
   "name": "vidify",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "ng": "ng && npm run sentry:sourcemaps",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng deploy"
+    "deploy": "ng deploy",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org vidify --project javascript-angular ./dist/vidify && sentry-cli sourcemaps upload --org vidify --project javascript-angular ./dist/vidify"
   },
   "private": true,
   "dependencies": {
@@ -20,6 +21,8 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@ngrx/signals": "^17.1.0",
+    "@sentry/angular": "^8.2.1",
+    "@sentry/cli": "^2.31.2",
     "primeflex": "^3.3.1",
     "primeicons": "^6.0.1",
     "primeng": "^17.3.1",
