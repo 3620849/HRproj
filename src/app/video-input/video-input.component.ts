@@ -39,7 +39,6 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   }
   ngOnInit(){
   }
-
   async onStart() {
     // Check if the code is running in the browser and if mediaDevices is supported
     if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
@@ -141,6 +140,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.isRecording = !this.isRecording;
     this.onDataAvailableVideoEvent();
     this.registerVideoRecordingEvent();
+
   }
   stopVideoRecording() {
     this.video.nativeElement.pause();
@@ -165,7 +165,6 @@ export class VideoInputComponent implements OnInit, OnDestroy {
   registerVideoRecordingEvent() {
     try {
       this.mediaRecorder.onstop = (event: Event) => {
-
         const videoBuffer = new Blob(this.recordedChunks, {
           type: 'video/'+this.mediaType
         });

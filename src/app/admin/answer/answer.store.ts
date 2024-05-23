@@ -20,13 +20,21 @@ type AnswerRewievState = {
     { providedIn: 'root' },
     withState(initialState),
     withMethods((store, adminService = inject(AdminService)) => ({
+        loadPublicAnswer(publicLink){
+            adminService.loadPublicTesteeAnswers(publicLink).subscribe({next:(formResp:AnswerReviewResponse)=>{ 
+              patchState(store, { answerReview:formResp, isLoading: false });
+            },error:error=>{
+              patchState(store, { answerReview:null, isLoading: false , error:error.message});
+            }})
+        },
         loadAnswersList(examId:string, userId:string){
           patchState(store, { isLoading: true});
-          adminService.loadTesteeAnswers(examId,userId).subscribe({next:(formResp:AnswerReviewResponse)=>{ 
-            patchState(store, { answerReview:formResp, isLoading: false });
-          },error:error=>{
-            patchState(store, { answerReview:null, isLoading: false , error:error.message});
-          }})
-        }
+           
+            adminService.loadTesteeAnswers(examId,userId).subscribe({next:(formResp:AnswerReviewResponse)=>{ 
+              patchState(store, { answerReview:formResp, isLoading: false });
+            },error:error=>{
+              patchState(store, { answerReview:null, isLoading: false , error:error.message});
+            }})
+          }
       }))
   );
