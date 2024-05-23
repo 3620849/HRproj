@@ -49,10 +49,10 @@ export class VideoInputComponent implements OnInit, OnDestroy {
         //Get video stream with specified parameters, including resolution constraints
         this.videoStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            frameRate: { exact: 16 },
+            frameRate: { ideal: 16 , max: 60},
             facingMode: { ideal: "user" },
-            width: { max: 1280 },
-            height: { max: 720 }
+            width: { ideal:1280, max: 3840 },
+            height: {ideal:720, max: 2160 }
           },
           audio: false
         });
@@ -96,6 +96,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   onStop() {
     this.video.nativeElement.pause();
     (this.video.nativeElement.srcObject as MediaStream)?.getTracks()?.forEach(t=>t.stop());
@@ -111,17 +112,18 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.video.nativeElement.removeEventListener("timeupdate",this.currTimeFn.bind(this));
   }
   startRecord(){
+
     this.mutedOnRecord = true;
     this.hideControls = true;
     this.recordedChunks = [];
     let options: any = {
-        mimeType: 'video/webm',
-        audioBitsPerSecond: 64000,
-        videoBitsPerSecond: 128000
+      mimeType: 'video/webm;codecs=vp9',
+      audioBitsPerSecond: 64000,
+      videoBitsPerSecond: 128000
     };
     try {
-        this.mediaRecorder = new MediaRecorder(this.stream, options);
-        this.mediaType = 'webm';
+      this.mediaRecorder = new MediaRecorder(this.stream, options);
+      this.mediaType = 'webm';
     } catch (err) {
       try {
         // Fallback for iOS
@@ -133,6 +135,7 @@ export class VideoInputComponent implements OnInit, OnDestroy {
         console.error({err2})
       }
     }
+
     this.mediaRecorder.start();
     this.isRecording = !this.isRecording;
     this.onDataAvailableVideoEvent();
@@ -145,43 +148,44 @@ export class VideoInputComponent implements OnInit, OnDestroy {
     this.isRecording = !this.isRecording;
     this.mutedOnRecord = false;
 
-}
+  }
   onDataAvailableVideoEvent() {
     try {
-        this.mediaRecorder.ondataavailable = (event: any) => {
-            if (event.data && event.data.size > 0) {
-                this.recordedChunks.push(event.data);
-                this.showControl = true;
-                this._cdr.detectChanges();
-            }
-        };
-    } catch (error) {
-        alert(error);
-    }
-}
-registerVideoRecordingEvent() {
-  try {
-      this.mediaRecorder.onstop = (event: Event) => {
-          const videoBuffer = new Blob(this.recordedChunks, {
-              type: 'video/'+this.mediaType
-          });
-          this.onRecordReady.emit({blob:videoBuffer,type:this.mediaType,resolution: this.resolution});
-          this.downloadVideoUrl = window.URL.createObjectURL(videoBuffer);
-          this.video.nativeElement.src = this.downloadVideoUrl;
-          this.video.nativeElement.srcObject = null;
-          this.video.nativeElement.play();
+      this.mediaRecorder.ondataavailable = (event: any) => {
+        if (event.data && event.data.size > 0) {
+          this.recordedChunks.push(event.data);
+          this.showControl = true;
+          this._cdr.detectChanges();
+        }
       };
-  } catch (error) {
+    } catch (error) {
       alert(error);
+    }
   }
-}
- setSrc(src:string){
-  this.userAnswerSrc = true;
-  this.autoplayVal = false;
-  this.video.nativeElement.src = src;
-  this.currentTime.emit(0);
-  this.video.nativeElement.addEventListener("timeupdate", this.currTimeFn.bind(this))
- }
+  registerVideoRecordingEvent() {
+    try {
+      this.mediaRecorder.onstop = (event: Event) => {
+        const videoBuffer = new Blob(this.recordedChunks, {
+          type: 'video/'+this.mediaType
+        });
+
+        this.onRecordReady.emit({blob:videoBuffer,type:this.mediaType,resolution: this.resolution});
+        this.downloadVideoUrl = window.URL.createObjectURL(videoBuffer);
+        this.video.nativeElement.src = this.downloadVideoUrl;
+        this.video.nativeElement.srcObject = null;
+        this.video.nativeElement.play();
+      };
+    } catch (error) {
+      alert(error);
+    }
+  }
+  setSrc(src:string){
+    this.userAnswerSrc = true;
+    this.autoplayVal = false;
+    this.video.nativeElement.src = src;
+    this.currentTime.emit(0);
+    this.video.nativeElement.addEventListener("timeupdate", this.currTimeFn.bind(this))
+  }
 
   currTimeFn(){
     this.currentTime.emit(this.video.nativeElement.currentTime)
